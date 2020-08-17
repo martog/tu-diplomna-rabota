@@ -2036,9 +2036,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     deviceId: Number,
@@ -38486,7 +38483,7 @@ var render = function() {
           staticClass: "custom-control-input",
           attrs: {
             type: "checkbox",
-            id: "device" + _vm.deviceId,
+            id: _vm.deviceId,
             disabled: _vm.deviceStatusLoading
           },
           domProps: {
@@ -38522,7 +38519,7 @@ var render = function() {
         _vm._v(" "),
         _c("label", {
           staticClass: "custom-control-label",
-          attrs: { for: "device" + _vm.deviceId }
+          attrs: { for: _vm.deviceId }
         })
       ])
     ]),

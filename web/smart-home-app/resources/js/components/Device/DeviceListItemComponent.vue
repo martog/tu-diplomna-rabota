@@ -17,14 +17,11 @@
                     type="checkbox"
                     class="custom-control-input"
                     v-model="deviceActive"
-                    :id="'device' + deviceId"
+                    :id="deviceId"
                     :disabled="deviceStatusLoading"
                     @click="onDeviceStatusChange()"
                 />
-                <label
-                    class="custom-control-label"
-                    :for="'device' + deviceId"
-                ></label>
+                <label class="custom-control-label" :for="deviceId"></label>
                 <!-- </div> -->
             </div>
         </div>
