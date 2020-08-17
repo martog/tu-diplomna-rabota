@@ -16,12 +16,14 @@
                 <input
                     type="checkbox"
                     class="custom-control-input"
-                    v-model="deviceActive"
+                    :checked="deviceActive"
                     :id="deviceId"
                     :disabled="deviceStatusLoading"
-                    @click="onDeviceStatusChange()"
+                    @change="onDeviceStatusChange()"
                 />
-                <label class="custom-control-label" :for="deviceId"></label>
+                <label class="custom-control-label" :for="deviceId"
+                    >Status: {{ getDeviceStatus() }}</label
+                >
                 <!-- </div> -->
             </div>
         </div>
@@ -58,6 +60,7 @@ export default {
         onDeviceStatusChange() {
             this.deviceStatusLoading = true;
             setTimeout(() => {
+                this.deviceActive = !this.deviceActive;
                 this.deviceStatusLoading = false;
             }, 2000);
         }
