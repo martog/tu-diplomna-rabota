@@ -1,17 +1,19 @@
 <template>
-    <div>
-        <div v-if="loading">
-            Loding...
-        </div>
-        <div v-else>
-            <device-list-item
-                v-for="device in devices"
-                :key="device.key"
-                :device-name="device.name"
-                :device-status="device.status"
-                :controller-name="device.controllerName"
-            ></device-list-item>
-        </div>
+    <div v-if="loading">
+        Loding...
+    </div>
+    <div v-else>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <device-list-item
+                    v-for="device in devices"
+                    :key="device.key"
+                    :device-name="device.name"
+                    :device-status="device.status"
+                    :controller-name="device.controllerName"
+                ></device-list-item>
+            </li>
+        </ul>
     </div>
 </template>
 
@@ -35,18 +37,18 @@ export default {
                 {
                     id: 1,
                     name: "Device 1 test",
-                    status: true,
+                    status: "On",
                     controllerName: "Controller 1"
                 },
                 {
                     id: 2,
                     name: "Device 2",
-                    status: false,
+                    status: "off",
                     controllerName: "Controller 2"
                 }
             ];
             this.loading = false;
-        }, 3000);
+        }, 1000);
     },
     mounted() {}
 };

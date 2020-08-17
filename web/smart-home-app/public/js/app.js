@@ -1952,6 +1952,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -1971,16 +1973,16 @@ __webpack_require__.r(__webpack_exports__);
       _this.devices = [{
         id: 1,
         name: "Device 1 test",
-        status: true,
+        status: "On",
         controllerName: "Controller 1"
       }, {
         id: 2,
         name: "Device 2",
-        status: false,
+        status: "off",
         controllerName: "Controller 2"
       }];
       _this.loading = false;
-    }, 3000);
+    }, 1000);
   },
   mounted: function mounted() {}
 });
@@ -2010,10 +2012,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     deviceName: String,
-    deviceStatus: Boolean,
+    deviceStatus: String,
     controllerName: String
   }
 });
@@ -2063,13 +2082,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Device_DeviceListComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Device/DeviceListComponent */ "./resources/js/components/Device/DeviceListComponent.vue");
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -37725,24 +37737,27 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _vm.loading
-      ? _c("div", [_vm._v("\n        Loding...\n    ")])
-      : _c(
-          "div",
-          _vm._l(_vm.devices, function(device) {
-            return _c("device-list-item", {
-              key: device.key,
-              attrs: {
-                "device-name": device.name,
-                "device-status": device.status,
-                "controller-name": device.controllerName
-              }
-            })
-          }),
-          1
-        )
-  ])
+  return _vm.loading
+    ? _c("div", [_vm._v("\n    Loding...\n")])
+    : _c("div", [
+        _c("ul", { staticClass: "list-group list-group-flush" }, [
+          _c(
+            "li",
+            { staticClass: "list-group-item" },
+            _vm._l(_vm.devices, function(device) {
+              return _c("device-list-item", {
+                key: device.key,
+                attrs: {
+                  "device-name": device.name,
+                  "device-status": device.status,
+                  "controller-name": device.controllerName
+                }
+              })
+            }),
+            1
+          )
+        ])
+      ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -37766,16 +37781,39 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h1", [_vm._v(_vm._s(_vm.deviceName))]),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-6" }, [
-        _c("p", [_vm._v(_vm._s(_vm.deviceStatus))])
+  return _c("li", { staticClass: "list-group-item" }, [
+    _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col" }, [
+          _c("h4", [_vm._v(_vm._s(_vm.deviceName))])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col custom-control custom-switch" }, [
+          _c("input", {
+            staticClass: "custom-control-input",
+            attrs: { type: "checkbox", id: "deviceStatus" },
+            domProps: { checked: _vm.deviceStatus == "On" ? true : false }
+          }),
+          _vm._v(" "),
+          _c(
+            "label",
+            {
+              staticClass: "custom-control-label",
+              attrs: { for: "deviceStatus" }
+            },
+            [_vm._v("Status")]
+          )
+        ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-6" }, [
-        _c("p", [_vm._v(_vm._s(_vm.controllerName))])
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-lg-6" }, [
+          _c("p", [_vm._v(_vm._s(_vm.controllerName))])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-lg-6" }, [
+          _c("p", [_vm._v(_vm._s(_vm.deviceStatus))])
+        ])
       ])
     ])
   ])
@@ -37850,26 +37888,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-8" }, [
-        _c(
-          "div",
-          { staticClass: "card" },
-          [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Home Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v("I'm the Home component.")
-            ]),
-            _vm._v(" "),
-            _c("device-list")
-          ],
-          1
-        )
-      ])
-    ])
+    _c("div", { staticClass: "justify-content-center" }, [_c("device-list")], 1)
   ])
 }
 var staticRenderFns = []
