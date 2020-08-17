@@ -2,17 +2,15 @@
     <div class="container">
         <div class="row">
             <div class="col-xl-2">
-                <h4>{{ deviceName }}</h4>
+                <h5>Device:</h5>
+                <p>{{ deviceName }}</p>
             </div>
-            <div class="col-xl-10 custom-control custom-switch">
-                <!-- <div
-                    v-if="deviceStatusLoading"
-                    class="spinner-border text-primary"
-                    role="status"
-                > -->
-                <span class="sr-only">Loading...</span>
-                <!-- </div> -->
-                <!-- <div v-else> -->
+            <div class="col-xl-4 text-right">
+                <h5>Controller:</h5>
+                <p>{{ controllerName }}</p>
+            </div>
+            <div class="col-xl-6 custom-control custom-switch">
+                <h5>Status:</h5>
                 <input
                     type="checkbox"
                     class="custom-control-input"
@@ -21,15 +19,9 @@
                     :disabled="deviceStatusLoading"
                     @change="onDeviceStatusChange()"
                 />
-                <label class="custom-control-label" :for="deviceId"
-                    >Status: {{ getDeviceStatus() }}</label
-                >
-                <!-- </div> -->
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xl-2">
-                <p>{{ controllerName }}</p>
+                <label class="custom-control-label" :for="deviceId">{{
+                    getDeviceStatus()
+                }}</label>
             </div>
         </div>
     </div>
@@ -69,7 +61,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-input {
-    text-align: left;
+label {
+    position: relative;
+    padding-left: 10.5em;
 }
 </style>

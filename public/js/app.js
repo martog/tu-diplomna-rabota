@@ -2030,14 +2030,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     deviceId: Number,
@@ -6568,7 +6560,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "input[data-v-560ead48] {\n  text-align: left;\n}", ""]);
+exports.push([module.i, "label[data-v-560ead48] {\n  position: relative;\n  padding-left: 10.5em;\n}", ""]);
 
 // exports
 
@@ -38468,11 +38460,19 @@ var render = function() {
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-xl-2" }, [
-        _c("h4", [_vm._v(_vm._s(_vm.deviceName))])
+        _c("h5", [_vm._v("Device:")]),
+        _vm._v(" "),
+        _c("p", [_vm._v(_vm._s(_vm.deviceName))])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-xl-10 custom-control custom-switch" }, [
-        _c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")]),
+      _c("div", { staticClass: "col-xl-4 text-right" }, [
+        _c("h5", [_vm._v("Controller:")]),
+        _vm._v(" "),
+        _c("p", [_vm._v(_vm._s(_vm.controllerName))])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-xl-6 custom-control custom-switch" }, [
+        _c("h5", [_vm._v("Status:")]),
         _vm._v(" "),
         _c("input", {
           staticClass: "custom-control-input",
@@ -38492,14 +38492,8 @@ var render = function() {
         _c(
           "label",
           { staticClass: "custom-control-label", attrs: { for: _vm.deviceId } },
-          [_vm._v("Status: " + _vm._s(_vm.getDeviceStatus()))]
+          [_vm._v(_vm._s(_vm.getDeviceStatus()))]
         )
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-xl-2" }, [
-        _c("p", [_vm._v(_vm._s(_vm.controllerName))])
       ])
     ])
   ])
