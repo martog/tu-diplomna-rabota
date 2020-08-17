@@ -1954,6 +1954,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -1978,7 +1981,7 @@ __webpack_require__.r(__webpack_exports__);
       }, {
         id: 2,
         name: "Device 2",
-        status: "off",
+        status: "Off",
         controllerName: "Controller 2"
       }];
       _this.loading = false;
@@ -2028,12 +2031,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
+    deviceId: Number,
     deviceName: String,
     deviceStatus: String,
     controllerName: String
+  },
+  data: function data() {
+    return {
+      deviceActive: this.isDeviceActive()
+    };
+  },
+  mounted: function mounted() {},
+  methods: {
+    isDeviceActive: function isDeviceActive() {
+      return this.deviceStatus === "On" ? true : false;
+    },
+    getDeviceStatus: function getDeviceStatus(data) {
+      return this.deviceActive ? "On" : "Off";
+    },
+    onDeviceStatusChange: function onDeviceStatusChange() {
+      console.log(this.deviceActive);
+    }
   }
 });
 
@@ -37740,23 +37760,28 @@ var render = function() {
   return _vm.loading
     ? _c("div", [_vm._v("\n    Loding...\n")])
     : _c("div", [
-        _c("ul", { staticClass: "list-group list-group-flush" }, [
-          _c(
-            "li",
-            { staticClass: "list-group-item" },
-            _vm._l(_vm.devices, function(device) {
-              return _c("device-list-item", {
-                key: device.key,
-                attrs: {
-                  "device-name": device.name,
-                  "device-status": device.status,
-                  "controller-name": device.controllerName
-                }
-              })
-            }),
-            1
-          )
-        ])
+        _c(
+          "ul",
+          { staticClass: "list-group list-group-flush" },
+          _vm._l(_vm.devices, function(device) {
+            return _c(
+              "li",
+              { key: device.id, staticClass: "list-group-item" },
+              [
+                _c("device-list-item", {
+                  attrs: {
+                    "device-id": device.id,
+                    "device-name": device.name,
+                    "device-status": device.status,
+                    "controller-name": device.controllerName
+                  }
+                })
+              ],
+              1
+            )
+          }),
+          0
+        )
       ])
 }
 var staticRenderFns = []
@@ -37781,39 +37806,75 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("li", { staticClass: "list-group-item" }, [
-    _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col" }, [
-          _c("h4", [_vm._v(_vm._s(_vm.deviceName))])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col custom-control custom-switch" }, [
-          _c("input", {
-            staticClass: "custom-control-input",
-            attrs: { type: "checkbox", id: "deviceStatus" },
-            domProps: { checked: _vm.deviceStatus == "On" ? true : false }
-          }),
-          _vm._v(" "),
-          _c(
-            "label",
-            {
-              staticClass: "custom-control-label",
-              attrs: { for: "deviceStatus" }
-            },
-            [_vm._v("Status")]
-          )
-        ])
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col" }, [
+        _c("h4", [_vm._v(_vm._s(_vm.deviceName))])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-lg-6" }, [
-          _c("p", [_vm._v(_vm._s(_vm.controllerName))])
-        ]),
+      _c("div", { staticClass: "col custom-control custom-switch" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.deviceActive,
+              expression: "deviceActive"
+            }
+          ],
+          staticClass: "custom-control-input",
+          attrs: { type: "checkbox", id: "device" + _vm.deviceId },
+          domProps: {
+            checked: Array.isArray(_vm.deviceActive)
+              ? _vm._i(_vm.deviceActive, null) > -1
+              : _vm.deviceActive
+          },
+          on: {
+            change: [
+              function($event) {
+                var $$a = _vm.deviceActive,
+                  $$el = $event.target,
+                  $$c = $$el.checked ? true : false
+                if (Array.isArray($$a)) {
+                  var $$v = null,
+                    $$i = _vm._i($$a, $$v)
+                  if ($$el.checked) {
+                    $$i < 0 && (_vm.deviceActive = $$a.concat([$$v]))
+                  } else {
+                    $$i > -1 &&
+                      (_vm.deviceActive = $$a
+                        .slice(0, $$i)
+                        .concat($$a.slice($$i + 1)))
+                  }
+                } else {
+                  _vm.deviceActive = $$c
+                }
+              },
+              function($event) {
+                return _vm.onDeviceStatusChange()
+              }
+            ]
+          }
+        }),
         _vm._v(" "),
-        _c("div", { staticClass: "col-lg-6" }, [
-          _c("p", [_vm._v(_vm._s(_vm.deviceStatus))])
-        ])
+        _c(
+          "label",
+          {
+            staticClass: "custom-control-label",
+            attrs: { for: "device" + _vm.deviceId }
+          },
+          [_vm._v("Status")]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-6" }, [
+        _c("p", [_vm._v(_vm._s(_vm.controllerName))])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-lg-6" }, [
+        _c("p", [_vm._v(_vm._s(_vm.getDeviceStatus()))])
       ])
     ])
   ])

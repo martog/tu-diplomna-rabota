@@ -4,10 +4,13 @@
     </div>
     <div v-else>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item">
+            <li
+                class="list-group-item"
+                v-for="device in devices"
+                v-bind:key="device.id"
+            >
                 <device-list-item
-                    v-for="device in devices"
-                    :key="device.key"
+                    :device-id="device.id"
                     :device-name="device.name"
                     :device-status="device.status"
                     :controller-name="device.controllerName"
@@ -43,7 +46,7 @@ export default {
                 {
                     id: 2,
                     name: "Device 2",
-                    status: "off",
+                    status: "Off",
                     controllerName: "Controller 2"
                 }
             ];
