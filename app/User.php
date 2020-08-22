@@ -57,4 +57,13 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public static function exists($email, $name)
+    {
+        return self::select('id', 'name', 'email')
+            ->where(function ($q) use ($email, $name) {
+                $q->where('email', $email)
+                    ->orWhere('name', $name);
+            });
+    }
 }

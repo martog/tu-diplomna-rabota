@@ -8,11 +8,14 @@ Route::group([
 ], function ($router) {
 
     /* AuthController */
-
-    Route::post('auth/register', 'AuthController@post')->withoutMiddleware('auth:api');
     Route::post('auth/login', 'AuthController@login')->withoutMiddleware('auth:api');
     Route::post('auth/logout', 'AuthController@logout');
     Route::post('auth/refresh', 'AuthController@refresh');
+
+
+    /* UsersController */
+    Route::post('users/register', 'UserController@register')->withoutMiddleware('auth:api');
+    Route::put('users/update', 'UserController@update');
 
 
     /* DeviceController */
