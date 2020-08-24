@@ -19,6 +19,5 @@ Route::group([
 
 
     /* DeviceController */
-    Route::post('devices/test', 'DeviceController@test');
-    Route::post('controllers', 'DeviceController@addController');
+    Route::post('devices/add', 'DeviceController@addDevices');
 });
