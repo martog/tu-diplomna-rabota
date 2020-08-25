@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Controller;
+use App\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Classes\DeviceClient;
-
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use PHPUnit\Util\Json;
 
 class DeviceController extends Controller
 {
@@ -25,7 +28,7 @@ class DeviceController extends Controller
         $this->deviceClient = new DeviceClient($host, $port);
     }
 
-    public function addDevices(Request $request)
+    public function addController(Request $request)
     {
         $requestData = $request->all();
         $validator = Validator::make($requestData, [
@@ -41,11 +44,49 @@ class DeviceController extends Controller
         $controllerName = $request->get("controller_name");
 
         $requestTopic = $controllerSerial . "/devices/info/req";
-        $responseTopic = $controllerSerial . "/devices/info/res";
+        $responseTopic = $controllerSerial . "/devices/info";
 
         // Request the devices configuration for controller by $controllerSerial
         $response = $this->deviceClient->makeRequest($requestTopic, $responseTopic, "get_devices_info");
 
-        dd($response);
+        if (!isset($response["code"]) || !isset($response["message"]) || !isset($response["topic"])) {
+            return new JsonResponse("Internal Server Error", 500);
+        }
+
+        if (isset($response["code"]) && $response["code"] != 200) {
+            return new JsonResponse($response["message"], $response["code"]);
+        }
+
+        // Create controller with devices
+        DB::beginTransaction();
+        try {
+            $controller = new Controller();
+            $controller->name = $controllerName;
+            $controller->serial_number = $controllerSerial;
+            $controller->status = "Online";
+            $controller->last_communication = date("Y-m-d H:i:s");
+            $controller->save();
+
+            $deviceCounter = 1;
+            foreach ($response["message"] as $deviceName => $deviceInfo) {
+                $device = new Device();
+                $device->code = $deviceName;
+                $device->name = "Device " . strval($deviceCounter);
+                $device->gpio_pin = $deviceInfo["pin"];
+                $device->status = $deviceInfo["status"];
+                $device->controller_id = $controller->id;
+                $device->user_id = Auth::user()->id;
+                $device->save();
+
+                $deviceCounter++;
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse("Controller and devices not added! Error:" . $e->getMessage(), 500);
+        }
+
+        return new JsonResponse($controller);
     }
 }

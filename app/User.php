@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Controller;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -17,7 +18,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'username', 'first_name', 'last_name', 'phone_number', 'email', 'password',
     ];
 
     /**
@@ -58,12 +59,25 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public static function exists($email, $name)
+    public function devices()
     {
-        return self::select('id', 'name', 'email')
-            ->where(function ($q) use ($email, $name) {
-                $q->where('email', $email)
-                    ->orWhere('name', $name);
+        return $this->hasMany('App\Device');
+    }
+
+    public function controllers()
+    {
+        return $this->hasManyThrough('App\Controller', 'App\Device', 'user_id', 'id', 'id', 'controller_id')->distinct();
+    }
+
+    public static function exists($email, $username = null)
+    {
+        return self::select('id', 'username', 'email')
+            ->where(function ($q) use ($email, $username) {
+                $q->where('email', $email);
+
+                if (isset($username)) {
+                    $q->orWhere('username', $username);
+                }
             });
     }
 }

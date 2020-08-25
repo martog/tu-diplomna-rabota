@@ -28,7 +28,7 @@ class AuthController extends Controller
     {
         $requestData = $request->all();
         $validator = Validator::make($requestData, [
-            'email' => 'required|email',
+            'username' => 'required|string',
             'password' => 'required|string'
 
         ]);
@@ -37,7 +37,7 @@ class AuthController extends Controller
             throw new ValidationException($validator, new JsonResponse($validator->errors()->first()));
         }
 
-        $credentials = request(['email', 'password']);
+        $credentials = request(['username', 'password']);
 
         if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);

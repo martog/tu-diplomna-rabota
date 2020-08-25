@@ -14,10 +14,11 @@ Route::group([
 
 
     /* UsersController */
-    Route::post('users/register', 'UserController@register')->withoutMiddleware('auth:api');
-    Route::put('users/update', 'UserController@update');
+    Route::post('user/register', 'UserController@register')->withoutMiddleware('auth:api');
+    Route::put('user/update', 'UserController@updateCurrentUser');
+    Route::delete('user/delete', 'UserController@deleteCurrentUser');
 
 
     /* DeviceController */
-    Route::post('devices/add', 'DeviceController@addDevices');
+    Route::post('controller/add', 'DeviceController@addController');
 });

@@ -2,11 +2,8 @@
 
 namespace App\Http\Classes;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Config;
 use PhpMqtt\Client\ConnectionSettings;
 use PhpMqtt\Client\MQTTClient;
-use PHPUnit\Util\Json;
 
 class DeviceClient
 {
@@ -55,6 +52,12 @@ class DeviceClient
                     "topic" => $responseTopic,
                     "message" => "Request Timeout",
                     "code" => 408
+                ];
+            } else {
+                $this->response =  [
+                    "topic" => $responseTopic,
+                    "message" => "Internal Server Error",
+                    "code" => 500
                 ];
             }
         } finally {
