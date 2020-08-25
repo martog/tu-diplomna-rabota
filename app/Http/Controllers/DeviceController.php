@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Controller;
 use App\Device;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Classes\DeviceClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use PHPUnit\Util\Json;
 
 class DeviceController extends Controller
 {
@@ -60,6 +59,9 @@ class DeviceController extends Controller
         // Create controller with devices
         DB::beginTransaction();
         try {
+            if (Controller::findBySerialAndUserId($controllerSerial, Auth::user()->id)->first()) {
+                throw new \Exception("Controller already exists.");
+            }
             $controller = new Controller();
             $controller->name = $controllerName;
             $controller->serial_number = $controllerSerial;
@@ -88,5 +90,33 @@ class DeviceController extends Controller
         }
 
         return new JsonResponse($controller);
+    }
+
+    public function removeController(Request $request)
+    {
+        $requestData = $request->all();
+        $validator = Validator::make($requestData, [
+            "controller_id" => "required|integer",
+        ]);
+
+        if ($validator->fails()) {
+            throw new \Exception($validator->errors()->first());
+        }
+
+        $controllerId = $request->get("controller_id");
+        $user = User::find(Auth::user()->id);
+
+        DB::beginTransaction();
+        try {
+            $user->devices()->where("controller_id", $controllerId)->delete();
+            Controller::find($request->get("controller_id"))->delete();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse("Error removing controller!");
+        }
+
+        return new JsonResponse("Success!");
     }
 }
