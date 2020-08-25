@@ -14,6 +14,7 @@ Route::group([
 
 
     /* UsersController */
+    Route::get('user', 'UserController@getCurrentUser');
     Route::post('user/register', 'UserController@register')->withoutMiddleware('auth:api');
     Route::put('user/update', 'UserController@updateCurrentUser');
     Route::delete('user/delete', 'UserController@deleteCurrentUser');
@@ -21,5 +22,6 @@ Route::group([
 
     /* DeviceController */
     Route::post('controller/add', 'DeviceController@addController');
+    Route::put('controller/update', 'DeviceController@updateController');
     Route::delete('controller/remove', 'DeviceController@removeController');
 });

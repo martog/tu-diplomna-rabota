@@ -50,7 +50,7 @@ class DeviceClient
             if ($e->getCode() == 408) {
                 $this->response =  [
                     "topic" => $responseTopic,
-                    "message" => "Request Timeout",
+                    "message" => "Request Timeout. Check if the serial number is correct and the device is turned on!",
                     "code" => 408
                 ];
             } else {

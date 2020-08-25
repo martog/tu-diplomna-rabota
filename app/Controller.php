@@ -18,17 +18,23 @@ class Controller extends Model
         return self::whereIn("id", $ids);
     }
 
-    public static function findBySerialAndUserId($serial, $userId = null)
+    public static function filter($id = null, $serial = null, $userId = null)
     {
-        if (!$userId) {
-            return self::where("serial_number", $serial);
+        $query = self::join("devices", "devices.controller_id", "=", "controllers.id")
+            ->join("users", "users.id", "=", "devices.user_id");
+
+        if (isset($id)) {
+            $query->where("controllers.id", $id);
         }
 
-        return self::join("devices", "devices.controller_id", "=", "controllers.id")
-            ->join("users", "users.id", "=", "devices.user_id")
-            ->where([
-                ["users.id", $userId],
-                ["controllers.serial_number", $serial]
-            ]);
+        if (isset($serial)) {
+            $query->where("controllers.serial_number", $serial);
+        }
+
+        if (isset($userId)) {
+            $query->where("users.id", $userId);
+        }
+
+        return $query->select("controllers.*");
     }
 }

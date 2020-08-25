@@ -42,6 +42,10 @@ class DeviceController extends Controller
         $controllerSerial = $request->get("controller_serial");
         $controllerName = $request->get("controller_name");
 
+        if (Controller::filter(null, $controllerSerial, Auth::user()->id)->first()) {
+            throw new \Exception("Controller already exists.");
+        }
+
         $requestTopic = $controllerSerial . "/devices/info/req";
         $responseTopic = $controllerSerial . "/devices/info";
 
@@ -59,9 +63,6 @@ class DeviceController extends Controller
         // Create controller with devices
         DB::beginTransaction();
         try {
-            if (Controller::findBySerialAndUserId($controllerSerial, Auth::user()->id)->first()) {
-                throw new \Exception("Controller already exists.");
-            }
             $controller = new Controller();
             $controller->name = $controllerName;
             $controller->serial_number = $controllerSerial;
@@ -106,6 +107,10 @@ class DeviceController extends Controller
         $controllerId = $request->get("controller_id");
         $user = User::find(Auth::user()->id);
 
+        if (!Controller::find($controllerId)) {
+            return new JsonResponse("Cannot find controller");
+        }
+
         DB::beginTransaction();
         try {
             $user->devices()->where("controller_id", $controllerId)->delete();
@@ -118,5 +123,67 @@ class DeviceController extends Controller
         }
 
         return new JsonResponse("Success!");
+    }
+
+    public function updateController(Request $request)
+    {
+        $requestData = $request->all();
+        $validator = Validator::make($requestData, [
+            "controller_id" => "required|integer",
+            "controller_serial" => "string|min:16|max:16",
+            "controller_name" => "string"
+        ]);
+
+        if ($validator->fails()) {
+            throw new \Exception($validator->errors()->first());
+        }
+
+        $controllerId = $request->get("controller_id");
+        $controllerSerial = $request->get("controller_serial",);
+        $controllerName = $request->get("controller_name");
+
+        $requestTopic = $controllerSerial . "/devices/info/req";
+        $responseTopic = $controllerSerial . "/devices/info";
+
+        $controller = Controller::filter($controllerId, null, Auth::user()->id)->first();
+        if (!$controller) {
+            throw new \Exception("Cannot find controller.");
+        }
+
+        DB::beginTransaction();
+        try {
+
+            if (isset($controllerName)) {
+                $controller->name = $controllerName;
+            }
+
+            if (isset($controllerSerial)) {
+
+
+                // Request the devices configuration for controller by $controllerSerial
+                $response = $this->deviceClient->makeRequest($requestTopic, $responseTopic, "get_devices_info");
+
+                if (!isset($response["code"]) || !isset($response["message"]) || !isset($response["topic"])) {
+                    return new JsonResponse("Internal Server Error", 500);
+                }
+
+                if (isset($response["code"]) && $response["code"] != 200) {
+                    return new JsonResponse($response["message"], $response["code"]);
+                }
+
+
+                $controller->serial_number = $controllerSerial;
+                $controller->status = "Online";
+                $controller->last_communication = date("Y-m-d H:i:s");
+            }
+            $controller->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse("Controller not updated! Error:" . $e->getMessage(), 500);
+        }
+
+        return new JsonResponse($controller);
     }
 }

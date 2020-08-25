@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+
+    public function getCurrentUser()
+    {
+        $user = User::find(Auth::user()->id);
+        return new JsonResponse($user);
+    }
+
     public function register(Request $request)
     {
         $requestData = $request->all();
