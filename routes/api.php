@@ -25,4 +25,6 @@ Route::group([
     Route::put('controller/update', 'DeviceController@updateController');
     Route::delete('controller/remove', 'DeviceController@removeController');
     Route::post('controller/devices/{device}/status/{status}', 'DeviceController@setDeviceStatus');
+    Route::put('controller/devices/{device}/update', 'DeviceController@updateDevice');
+    Route::get('controller/{controllerId}/devices', 'DeviceController@getDevices');
 });

@@ -234,4 +234,39 @@ class DeviceController extends Controller
 
         return new JsonResponse($device, 200);
     }
+
+    public function updateDevice(Device $device, Request $request)
+    {
+        if ($device->user() != User::find(Auth::user()->id)) {
+            return new JsonResponse("Device not found!", 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            "device_name" => "string"
+        ]);
+
+        if ($validator->fails()) {
+            throw new \Exception($validator->errors()->first());
+        }
+
+        $deviceName = $request->get("device_name");
+        if (isset($deviceName)) {
+            $device->name = $deviceName;
+            $device->save();
+        }
+
+        return new JsonResponse($device, 200);
+    }
+
+    public function getDevices(int $controllerId)
+    {
+        $user =  User::find(Auth::user()->id);
+        $controller = Controller::filter($controllerId, null, $user->id)->first();
+
+        if (!isset($controller)) {
+            return new JsonResponse("Controller not found!", 404);
+        }
+
+        return new JsonResponse($controller->devices()->get(), 200);
+    }
 }
