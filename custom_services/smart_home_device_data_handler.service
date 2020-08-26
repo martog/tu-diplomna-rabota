@@ -1,0 +1,15 @@
+[Unit]
+Description=Smart Home service for updating database when device data is received
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/php /mnt/e/Repositories/tu-dipl-be/artisan device:handle-received-data
+ExecReload=/usr/bin/php /mnt/e/Repositories/tu-dipl-be/artisan device:handle-received-data
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+KillMode=process
+Type=notify
+
+[Install]
+WantedBy=multi-user.target
