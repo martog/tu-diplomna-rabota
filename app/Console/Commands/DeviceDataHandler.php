@@ -45,7 +45,7 @@ class DeviceDataHandler extends Command
         $username = Config::get('mqtt.username');
         $password = Config::get('mqtt.password');
 
-        $this->timeout = 10;
+        $this->timeout = 30;
         $this->mqttClient = new MQTTClient($host, $port);
         $this->mqttClient->connect($username, $password, null, true);
     }

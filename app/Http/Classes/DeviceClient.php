@@ -4,6 +4,7 @@ namespace App\Http\Classes;
 
 use PhpMqtt\Client\ConnectionSettings;
 use PhpMqtt\Client\MQTTClient;
+use App\Device;
 
 class DeviceClient
 {

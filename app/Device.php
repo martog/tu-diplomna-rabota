@@ -7,10 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Device extends Model
 {
     protected $table = "devices";
+    protected $hidden = ["code"];
 
 
     public function controller()
     {
-        $this->hasOne('App\Controller', 'id', 'controller_id');
+        return $this->belongsTo('App\Controller')->first();
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User')->first();
     }
 }

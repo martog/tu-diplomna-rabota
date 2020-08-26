@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Classes\DeviceClient;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Util\Json;
 
 class DeviceController extends Controller
 {
@@ -24,7 +25,11 @@ class DeviceController extends Controller
         $host = Config::get('mqtt.host');
         $port = Config::get('mqtt.port');
 
-        $this->deviceClient = new DeviceClient($host, $port);
+        try {
+            $this->deviceClient = new DeviceClient($host, $port);
+        } catch (\Exception $e) {
+            $this->deviceClient = null;
+        }
     }
 
     public function addController(Request $request)
@@ -44,6 +49,10 @@ class DeviceController extends Controller
 
         if (Controller::filter(null, $controllerSerial, Auth::user()->id)->first()) {
             throw new \Exception("Controller already exists.");
+        }
+
+        if (!isset($this->deviceClient)) {
+            return new JsonResponse("MQTTClient Error: Cannot connect to device!", 500);
         }
 
         $requestTopic = $controllerSerial . "/devices/info/req";
@@ -159,6 +168,9 @@ class DeviceController extends Controller
 
             if (isset($controllerSerial)) {
 
+                if (!isset($this->deviceClient)) {
+                    return new JsonResponse("MQTTClient Error: Cannot connect to device!", 500);
+                }
 
                 // Request the devices configuration for controller by $controllerSerial
                 $response = $this->deviceClient->makeRequest($requestTopic, $responseTopic, "get_devices_info");
@@ -185,5 +197,41 @@ class DeviceController extends Controller
         }
 
         return new JsonResponse($controller);
+    }
+
+    public function setDeviceStatus(Device $device, string $status)
+    {
+        if ($device->user() != User::find(Auth::user()->id)) {
+            return new JsonResponse("Device not found!", 404);
+        }
+
+        $validator = Validator::make(["status" => $status], [
+            "status" => "string|in:On,Off"
+        ]);
+
+        if ($validator->fails()) {
+            throw new \Exception($validator->errors()->first());
+        }
+
+        if (!isset($this->deviceClient)) {
+            return new JsonResponse("MQTTClient Error: Cannot connect to device!", 500);
+        }
+
+        $requestTopic = $device->controller()->serial_number . "/" . $device->code;
+        $responseTopic = $device->controller()->serial_number . "/devices/" . $device->code . "/status";
+        $response = $this->deviceClient->makeRequest($requestTopic, $responseTopic, $status);
+
+        if (!isset($response["code"]) || !isset($response["message"]) || !isset($response["topic"])) {
+            return new JsonResponse("Internal Server Error", 500);
+        }
+
+        if (isset($response["code"]) && $response["code"] != 200) {
+            return new JsonResponse($response["message"], $response["code"]);
+        }
+
+        $device->status = $status;
+        $device->save();
+
+        return new JsonResponse($device, 200);
     }
 }
