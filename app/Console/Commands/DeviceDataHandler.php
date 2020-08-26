@@ -42,7 +42,7 @@ class DeviceDataHandler extends Command
         $host = Config::get('mqtt.host');
         $port = Config::get('mqtt.port');
 
-        HandleReceivedDeviceData::dispatchNow($host, $port);
+        HandleReceivedDeviceData::dispatchNow($host, $port, 10)->onQueue("updateDevicesData");
         return 0;
     }
 }

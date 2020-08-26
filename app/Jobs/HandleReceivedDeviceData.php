@@ -18,9 +18,12 @@ class HandleReceivedDeviceData implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     private $mqttClient;
+    private $controllersTimeCheck;
+    private $timeout;
 
-    public function __construct($host, $port, $username = null, $password = null, $cleanSessionFlag = true, ConnectionSettings $connectionSettings = null)
+    public function __construct($host, $port, $timeout, $username = null, $password = null, $cleanSessionFlag = true, ConnectionSettings $connectionSettings = null)
     {
+        $this->timeout = $timeout;
         $this->mqttClient = new MQTTClient($host, $port);
         $this->mqttClient->connect($username, $password, $connectionSettings, $cleanSessionFlag);
     }
@@ -43,21 +46,24 @@ class HandleReceivedDeviceData implements ShouldQueue
         foreach ($controllers as $controller) {
             $topic = $controller->serial_number . "/devices/info";
             $this->mqttClient->subscribe($topic, \Closure::fromCallable([$this, 'receive']), 0);
+
+            $this->controllersTimeCheck[$controller->id] = microtime(true);
         }
 
-        $this->mqttClient->loop(true);
-
         // Register LoopEventHandler. This method executes the passed callback function ont each loop() iteration.
-        // $this->mqttClient->registerLoopEventHandler(\Closure::fromCallable([$this, 'iteration']));
+        $this->mqttClient->registerLoopEventHandler(\Closure::fromCallable([$this, 'iteration']));
+        $this->mqttClient->loop(true);
     }
 
 
     private function iteration($mqttc, $elapsedTime)
     {
-        // Interrupt mqtt loop if timeout reached.
-        if ($elapsedTime >= 10) {
-            $mqttc->interrupt();
-            throw new \Exception("Request timed out!", 408);
+        foreach ($this->controllersTimeCheck as $controllerId => $time) {
+            if ((microtime(true) - $time) >= floatval($this->timeout)) {
+                $controller = Controller::find($controllerId);
+                $controller->status = "Offline";
+                $controller->save();
+            }
         }
     }
 
@@ -66,11 +72,13 @@ class HandleReceivedDeviceData implements ShouldQueue
         echo ($topic . "\n" . $message);
         $controllerSerial = explode("/", $topic)[0];
         $controller = Controller::filter(null, $controllerSerial, null)->first();
+        $this->controllersTimeCheck[$controller->id] = microtime(true);
 
         DB::beginTransaction();
         try {
 
             $controller->last_communication = date("Y-m-d H:i:s");
+            $controller->status = "Online";
             $controller->save();
             $devices = $controller->devices()->get();
 
