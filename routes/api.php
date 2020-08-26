@@ -29,4 +29,5 @@ Route::group([
     Route::post('controller/devices/{device}/status/{status}', 'DeviceController@setDeviceStatus');
     Route::put('controller/devices/{device}/update', 'DeviceController@updateDevice');
     Route::get('controllers', 'DeviceController@getControllers');
+    Route::get('controllers/search', 'DeviceController@searchController');
 });
