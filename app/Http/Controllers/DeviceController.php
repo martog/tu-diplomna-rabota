@@ -255,4 +255,20 @@ class DeviceController extends Controller
 
         return new JsonResponse($controller->serial_number, 200);
     }
+
+    public function searchController(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "name" => "required|string"
+        ]);
+
+        if ($validator->fails()) {
+            throw new \Exception($validator->errors()->first());
+        }
+
+        $name = $request->get("name");
+        $user =  User::find(Auth::user()->id);
+        $response = $user->controllers()->where('controllers.name', 'like', "%{$name}%")->get();
+        return new JsonResponse($response, 200);
+    }
 }
