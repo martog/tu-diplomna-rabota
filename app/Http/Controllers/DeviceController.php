@@ -71,9 +71,9 @@ class DeviceController extends Controller
             $controller->save();
 
             $deviceCounter = 1;
-            foreach ($response["message"] as $deviceName => $deviceInfo) {
+            foreach ($response["message"] as $deviceCode => $deviceInfo) {
                 $device = new Device();
-                $device->code = $deviceName;
+                $device->code = $deviceCode;
                 $device->name = "Device " . strval($deviceCounter);
                 $device->gpio_pin = $deviceInfo["pin"];
                 $device->status = $deviceInfo["status"];

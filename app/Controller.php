@@ -10,7 +10,7 @@ class Controller extends Model
 
     public function devices()
     {
-        return $this->belongsToMany("App\Device", "controller_id", "id");
+        return $this->hasMany("App\Device", "controller_id", "id");
     }
 
     public static function findByIds($ids = [])
