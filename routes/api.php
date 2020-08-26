@@ -22,9 +22,11 @@ Route::group([
 
     /* DeviceController */
     Route::post('controller/add', 'DeviceController@addController');
-    Route::put('controller/update', 'DeviceController@updateController');
-    Route::delete('controller/remove', 'DeviceController@removeController');
+    Route::put('controller/{controllerId}/update', 'DeviceController@updateController');
+    Route::get('controller/{controllerId}/devices', 'DeviceController@getDevices');
+    Route::post('controller/{controllerId}/serial', 'DeviceController@getControllerSerialNumber');
+    Route::delete('controller/{controllerId}/remove', 'DeviceController@removeController');
     Route::post('controller/devices/{device}/status/{status}', 'DeviceController@setDeviceStatus');
     Route::put('controller/devices/{device}/update', 'DeviceController@updateDevice');
-    Route::get('controller/{controllerId}/devices', 'DeviceController@getDevices');
+    Route::get('controllers', 'DeviceController@getControllers');
 });

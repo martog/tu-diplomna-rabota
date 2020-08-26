@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Controller extends Model
 {
     protected $table = "controllers";
+    protected $hidden = ["laravel_through_key", "serial_number"];
 
     public function devices()
     {
