@@ -2,34 +2,49 @@ import VueRouter from "vue-router";
 import HomeComponent from "./components/HomeComponent";
 import DeviceListComponent from "./components/Device/DeviceListComponent";
 import LoginComponent from "./components/Auth/LoginComponent";
+import LogoutComponent from "./components/Auth/LogoutComponent";
 import RegistrationComponent from "./components/Auth/RegistrationComponent";
-import Example2 from "./components/Example2";
 
 const routes = [
     {
         path: "/home",
         component: HomeComponent,
-        name: "home"
+        name: "home",
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: "/device-list",
         component: DeviceListComponent,
-        name: "device-list"
+        name: "device-list",
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: "/login",
         component: LoginComponent,
-        name: "login"
+        name: "login",
+        meta: {
+            requiresVisitor: true
+        }
+    },
+    {
+        path: "/logout",
+        component: LogoutComponent,
+        name: "logout",
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: "/register",
         component: RegistrationComponent,
-        name: "register"
-    },
-    {
-        path: "/second",
-        component: Example2,
-        name: "second"
+        name: "register",
+        meta: {
+            requiresVisitor: true
+        }
     }
 ];
 

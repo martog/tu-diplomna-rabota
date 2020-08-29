@@ -30,6 +30,19 @@ export default {
         }
     },
     actions: {
+        register(context, credentials) {
+            return new Promise((resolve, reject) => {
+                axios
+                    .post("/user/register", credentials)
+                    .then(response => {
+                        resolve(response);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        reject(error);
+                    });
+            });
+        },
         retrieveToken(context, credentials) {
             return new Promise((resolve, reject) => {
                 axios
@@ -55,6 +68,36 @@ export default {
                         reject(error);
                     });
             });
+        },
+        logout(context) {
+            if (context.getters.loggedIn) {
+                axios.defaults.headers.common["Authorization"] =
+                    "Bearer " + context.state.token;
+                return new Promise((resolve, reject) => {
+                    axios
+                        .post("/auth/logout")
+                        .then(response => {
+                            localStorage.removeItem("access_token");
+                            localStorage.removeItem("user");
+
+                            context.commit("destroyToken");
+                            context.commit("destroyUser");
+
+                            console.log(response);
+                            resolve(response);
+                        })
+                        .catch(error => {
+                            localStorage.removeItem("access_token");
+                            localStorage.removeItem("user");
+
+                            context.commit("destroyToken");
+                            context.commit("destroyUser");
+
+                            console.log(error);
+                            reject(error);
+                        });
+                });
+            }
         }
     }
 };

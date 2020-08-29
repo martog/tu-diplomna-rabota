@@ -32,6 +32,13 @@
                         <a href="register">Sign up</a></span
                     >
                 </form>
+                <div
+                    :hidden="!showError"
+                    class="alert alert-danger mt-2"
+                    role="alert"
+                >
+                    {{ errorMsg }}
+                </div>
             </div>
         </div>
     </div>
@@ -43,19 +50,27 @@ export default {
     data() {
         return {
             username: "",
-            password: ""
+            password: "",
+            showError: false,
+            errorMsg: "Server error. Please contact administrator."
         };
     },
     methods: {
         login() {
-            console.log("here");
             this.$store
                 .dispatch("retrieveToken", {
                     username: this.username,
                     password: this.password
                 })
                 .then(response => {
+                    this.showError = false;
                     this.$router.push({ name: "home" });
+                })
+                .catch(error => {
+                    if (error.response.status) {
+                        this.errorMsg = "Invalid credentials! Try again.";
+                        this.showError = true;
+                    }
                 });
         }
     },
