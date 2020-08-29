@@ -34,24 +34,38 @@ export default {
     },
     created() {
         this.loading = true;
+        const devicesRequest = axios.get("/api/controller/36/devices");
 
-        setTimeout(() => {
-            this.devices = [
-                {
-                    id: 1,
-                    name: "Device 1 test",
-                    status: "On",
-                    controllerName: "Controller 1"
-                },
-                {
-                    id: 2,
-                    name: "Device 2",
-                    status: "Off",
-                    controllerName: "Controller 2"
-                }
-            ];
+        devicesRequest.then(response => {
+            this.devices = response.data.map(item => {
+                return {
+                    id: item.id,
+                    name: item.name,
+                    status: item.status,
+                    controllerName: item.controller_id.toString()
+                };
+            });
+            console.log(this.devices);
             this.loading = false;
-        }, 1000);
+        });
+
+        // setTimeout(() => {
+        //     this.devices = [
+        //         {
+        //             id: 1,
+        //             name: "Device 1 test",
+        //             status: "On",
+        //             controllerName: "Controller 1"
+        //         },
+        //         {
+        //             id: 2,
+        //             name: "Device 2",
+        //             status: "Off",
+        //             controllerName: "Controller 2"
+        //         }
+        //     ];
+        //     this.loading = false;
+        // }, 1000);
     },
     mounted() {}
 };

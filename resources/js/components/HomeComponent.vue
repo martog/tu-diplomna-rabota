@@ -1,20 +1,14 @@
 <template>
-    <div class="container">
-        <div class="justify-content-center">
-            <device-list></device-list>
-        </div>
+    <div style="border:1px solid black;">
+        <h1>Home</h1>
     </div>
 </template>
 
 <script>
-import DeviceList from "./Device/DeviceListComponent";
 export default {
-    components: {
-        DeviceList
-    },
-
     mounted() {
         console.log("Component mounted.");
-    }
+    },
+    created() {}
 };
 </script>

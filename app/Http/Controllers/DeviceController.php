@@ -215,8 +215,7 @@ class DeviceController extends Controller
 
     public function getDevices(int $controllerId)
     {
-        $user =  User::find(Auth::user()->id);
-        $controller = Controller::filter($controllerId, null, $user->id)->first();
+        $controller = Controller::filter($controllerId, null, Auth::user()->id)->first();
 
         if (!isset($controller)) {
             return new JsonResponse("Controller not found!", 404);
