@@ -60,6 +60,8 @@ export default {
                         context.commit("retrieveToken", token);
                         context.commit("retrieveUser", user);
 
+                        axios.defaults.headers.common["Authorization"] =
+                            "Bearer " + context.state.token;
                         console.log(response);
                         resolve(response);
                     })

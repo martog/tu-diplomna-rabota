@@ -2302,7 +2302,7 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     this.loading = true;
-    var devicesRequest = axios.get("/api/controller/36/devices");
+    var devicesRequest = axios.get("/controller/36/devices");
     devicesRequest.then(function (response) {
       _this.devices = response.data.map(function (item) {
         return {
@@ -2419,13 +2419,19 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Device_DeviceListComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Device/DeviceListComponent */ "./resources/js/components/Device/DeviceListComponent.vue");
 //
 //
 //
 //
 //
 //
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    DevicesList: _Device_DeviceListComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   mounted: function mounted() {
     console.log("Component mounted.");
   },
@@ -39358,18 +39364,14 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    { staticStyle: { border: "1px solid black" } },
+    [_c("h1", [_vm._v("Home")]), _vm._v(" "), _c("devices-list")],
+    1
+  )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticStyle: { border: "1px solid black" } }, [
-      _c("h1", [_vm._v("Home")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -56608,6 +56610,7 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.baseURL = "http://localhos
           localStorage.setItem("user", JSON.stringify(user));
           context.commit("retrieveToken", token);
           context.commit("retrieveUser", user);
+          axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.headers.common["Authorization"] = "Bearer " + context.state.token;
           console.log(response);
           resolve(response);
         })["catch"](function (error) {

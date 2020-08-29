@@ -34,7 +34,7 @@ export default {
     },
     created() {
         this.loading = true;
-        const devicesRequest = axios.get("/api/controller/36/devices");
+        const devicesRequest = axios.get("/controller/36/devices");
 
         devicesRequest.then(response => {
             this.devices = response.data.map(item => {
