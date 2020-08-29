@@ -1925,10 +1925,51 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: {
     loggedIn: function loggedIn() {
       return this.$store.getters.loggedIn;
+    },
+    currentUser: function currentUser() {
+      var userData = this.$store.getters.userData;
+
+      if (userData) {
+        return userData.first_name + " " + userData.last_name;
+      }
     }
   }
 });
@@ -38531,31 +38572,98 @@ var render = function() {
     _c(
       "nav",
       {
-        staticClass: "navbar bg-white border-bottom navbar-light",
-        attrs: { hidden: !_vm.loggedIn }
+        staticClass: "navbar navbar-expand-lg fixed-top navbar-dark bg-dark",
+        attrs: { hidden: !_vm.loggedIn || !_vm.currentUser }
       },
       [
-        _c(
-          "router-link",
-          {
-            staticClass: "navbar-brand mr-auto",
-            attrs: { to: { name: "home" } }
-          },
-          [_vm._v("SmartHome")]
-        )
-      ],
-      1
+        _c("a", { staticClass: "navbar-brand" }, [_vm._v("SmartHome")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "collapse navbar-collapse" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("ul", { staticClass: "navbar-nav" }, [
+            _c("li", { staticClass: "nav-item dropdown" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "nav-link dropdown-toggle",
+                  attrs: {
+                    href: "#",
+                    id: "navbarDropdown",
+                    role: "button",
+                    "data-toggle": "dropdown",
+                    "aria-haspopup": "true",
+                    "aria-expanded": "false"
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.currentUser) +
+                      "\n                    "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _vm._m(1)
+            ])
+          ])
+        ])
+      ]
     ),
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "container mt-4 mb-4 pr-4 pl-4" },
+      { staticClass: "container mt-6 mt-5 mb-4 pr-1 pl-1" },
       [_c("router-view")],
       1
     )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("ul", { staticClass: "navbar-nav mr-auto" }, [
+      _c("li", { staticClass: "nav-item active" }, [
+        _c("a", { staticClass: "nav-link", attrs: { href: "/home" } }, [
+          _vm._v("Home "),
+          _c("span", { staticClass: "sr-only" })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", { staticClass: "nav-item" }, [
+        _c("a", { staticClass: "nav-link", attrs: { href: "#" } }, [
+          _vm._v("About")
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "dropdown-menu",
+        attrs: { "aria-labelledby": "navbarDropdown" }
+      },
+      [
+        _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
+          _vm._v("Edit profile")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "dropdown-divider" }),
+        _vm._v(" "),
+        _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
+          _vm._v("Log out")
+        ])
+      ]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -56101,7 +56209,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var routes = [{
-  path: "/",
+  path: "/home",
   component: _components_HomeComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
   name: "home"
 }, {
@@ -56145,19 +56253,29 @@ __webpack_require__.r(__webpack_exports__);
 axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.baseURL = "http://localhost:8000/api";
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: {
-    token: localStorage.getItem("access_token") || null
+    token: localStorage.getItem("access_token") || null,
+    user: JSON.parse(localStorage.getItem("user") || null)
   },
   getters: {
     loggedIn: function loggedIn(state) {
       return state.token !== null;
+    },
+    userData: function userData(state) {
+      return state.user;
     }
   },
   mutations: {
+    retrieveUser: function retrieveUser(state, user) {
+      state.user = user;
+    },
     retrieveToken: function retrieveToken(state, token) {
       state.token = token;
     },
     destroyToken: function destroyToken(state) {
       state.token = null;
+    },
+    destroyUser: function destroyUser(state) {
+      state.user = null;
     }
   },
   actions: {
@@ -56168,8 +56286,11 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.baseURL = "http://localhos
           password: credentials.password
         }).then(function (response) {
           var token = response.data.access_token;
+          var user = response.data.user;
           localStorage.setItem("access_token", token);
+          localStorage.setItem("user", JSON.stringify(user));
           context.commit("retrieveToken", token);
+          context.commit("retrieveUser", user);
           console.log(response);
           resolve(response);
         })["catch"](function (error) {

@@ -7,7 +7,7 @@ import Example2 from "./components/Example2";
 
 const routes = [
     {
-        path: "/",
+        path: "/home",
         component: HomeComponent,
         name: "home"
     },

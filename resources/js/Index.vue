@@ -1,15 +1,49 @@
 <template>
     <div>
         <nav
-            class="navbar bg-white border-bottom navbar-light"
-            :hidden="!loggedIn"
+            :hidden="!loggedIn || !currentUser"
+            class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark"
         >
-            <router-link class="navbar-brand mr-auto" :to="{ name: 'home' }"
-                >SmartHome</router-link
-            >
+            <a class="navbar-brand">SmartHome</a>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/home"
+                            >Home <span class="sr-only"></span
+                        ></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="navbarDropdown"
+                            role="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                            {{ currentUser }}
+                        </a>
+                        <div
+                            class="dropdown-menu"
+                            aria-labelledby="navbarDropdown"
+                        >
+                            <a class="dropdown-item" href="#">Edit profile</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Log out</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </nav>
 
-        <div class="container mt-4 mb-4 pr-4 pl-4">
+        <div class="container mt-6 mt-5 mb-4 pr-1 pl-1">
             <router-view></router-view>
         </div>
     </div>
@@ -20,6 +54,12 @@ export default {
     computed: {
         loggedIn() {
             return this.$store.getters.loggedIn;
+        },
+        currentUser() {
+            const userData = this.$store.getters.userData;
+            if (userData) {
+                return userData.first_name + " " + userData.last_name;
+            }
         }
     }
 };
