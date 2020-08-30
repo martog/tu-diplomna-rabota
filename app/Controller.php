@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Controller extends Model
 {
@@ -37,5 +38,38 @@ class Controller extends Model
         }
 
         return $query->select("controllers.*");
+    }
+
+    public static function getControllersWithDevicesStatusByUser($userId)
+    {
+        $controllerDevices = self::select(
+            "controllers.id",
+            "controllers.name",
+            "controllers.status",
+            "controllers.last_communication",
+            "devices.status as device_status",
+            DB::raw("case when devices.status = 'On' then count(devices.id) else 0 end as devices_num_on"),
+            DB::raw("case when devices.status = 'Off' then count(devices.id) else 0 end as devices_num_off")
+        )
+            ->join("devices", "devices.controller_id", "=", "controllers.id")
+            ->where("devices.user_id", $userId)
+            ->groupBy("controllers.id", "devices.status");
+
+        $query = self::withExpression('controllerDevices', $controllerDevices)
+            ->select(
+                "id",
+                "name",
+                "status",
+                "last_communication",
+                DB::raw("
+                    json_build_object(
+                        'On', sum(devices_num_on),
+                        'Off', sum(devices_num_off)
+                    ) as devices")
+            )
+            ->from("controllerDevices")
+            ->groupBy("id", "name", "status", "last_communication");
+
+        return $query->get();
     }
 }

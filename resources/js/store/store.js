@@ -2,6 +2,19 @@ import axios from "axios";
 
 axios.defaults.baseURL = "http://localhost:8000/api";
 
+axios.interceptors.request.use(
+    config => {
+        const token = localStorage.getItem("access_token");
+        if (token) {
+            config.headers["Authorization"] = "Bearer " + token;
+        }
+        return config;
+    },
+    error => {
+        Promise.reject(error);
+    }
+);
+
 export default {
     state: {
         token: localStorage.getItem("access_token") || null,
@@ -62,7 +75,6 @@ export default {
 
                         axios.defaults.headers.common["Authorization"] =
                             "Bearer " + context.state.token;
-                        console.log(response);
                         resolve(response);
                     })
                     .catch(error => {
@@ -73,8 +85,6 @@ export default {
         },
         logout(context) {
             if (context.getters.loggedIn) {
-                axios.defaults.headers.common["Authorization"] =
-                    "Bearer " + context.state.token;
                 return new Promise((resolve, reject) => {
                     axios
                         .post("/auth/logout")

@@ -1,15 +1,15 @@
 <template>
     <div style="border:1px solid black;">
         <h1>Home</h1>
-        <devices-list></devices-list>
+        <controller-list></controller-list>
     </div>
 </template>
 
 <script>
-import DevicesList from "./Device/DeviceListComponent";
+import ControllerList from "./Controller/ControllerListComponent";
 export default {
     components: {
-        DevicesList
+        ControllerList
     },
     mounted() {
         console.log("Component mounted.");

@@ -226,8 +226,13 @@ class DeviceController extends Controller
 
     public function getControllers()
     {
-        $user =  User::find(Auth::user()->id);
-        return new JsonResponse($user->controllers()->get(), 200);
+        $controllers = Controller::getControllersWithDevicesStatusByUser(Auth::user()->id);
+        $controllers = array_map(function ($item) {
+            $item["devices"] = json_decode($item["devices"]);
+            return $item;
+        }, $controllers->toArray());
+
+        return new JsonResponse($controllers, 200);
     }
 
 
