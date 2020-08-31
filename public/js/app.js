@@ -2285,6 +2285,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2331,12 +2364,61 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     name: String,
     status: String,
     lastCommunication: String,
     devices: Object
+  },
+  computed: {
+    getBadgeClass: function getBadgeClass() {
+      if (this.status === "Online") {
+        return {
+          "badge-success": true,
+          "badge-danger": false
+        };
+      }
+
+      return {
+        "badge-success": false,
+        "badge-danger": true
+      };
+    }
   }
 });
 
@@ -2507,7 +2589,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Controller_ControllerListComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Controller/ControllerListComponent */ "./resources/js/components/Controller/ControllerListComponent.vue");
-//
 //
 //
 //
@@ -38800,7 +38881,7 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "container mt-6 mt-5 mb-4 pr-1 pl-1" },
+      { staticClass: "container-fluid mt-6 mb-4 pr-10 pl-10" },
       [_c("router-view")],
       1
     )
@@ -39339,33 +39420,105 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      this.loading
-        ? _c("div", [_c("p", [_vm._v("Loading")])])
-        : _vm._l(this.controllers, function(controller, index) {
-            return _c(
-              "div",
-              { key: index },
-              [
-                _c("controller-list-item", {
-                  attrs: {
-                    name: controller.name,
-                    status: controller.status,
-                    lastCommunication: controller.last_communication,
-                    devices: controller.devices
-                  }
-                })
-              ],
-              1
-            )
-          })
-    ],
-    2
-  )
+  return _c("div", [
+    _c("h1", [_vm._v("My Controllers")]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "row mb-5" },
+      [
+        this.loading
+          ? _c("div", [_c("p", [_vm._v("Loading")])])
+          : _vm._l(this.controllers, function(controller, index) {
+              return _c(
+                "div",
+                { key: index, staticClass: "col" },
+                [
+                  _c("controller-list-item", {
+                    attrs: {
+                      name: controller.name,
+                      status: controller.status,
+                      lastCommunication: controller.last_communication,
+                      devices: controller.devices
+                    }
+                  })
+                ],
+                1
+              )
+            })
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _vm._m(0)
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col text-right" }, [
+        _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
+          _c("ul", { staticClass: "pagination" }, [
+            _c("li", { staticClass: "page-item" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "page-link",
+                  attrs: { href: "#", "aria-label": "Previous" }
+                },
+                [
+                  _c("span", { attrs: { "aria-hidden": "true" } }, [
+                    _vm._v("«")
+                  ]),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "sr-only" }, [_vm._v("Previous")])
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("li", { staticClass: "page-item" }, [
+              _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+                _vm._v("1")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("li", { staticClass: "page-item" }, [
+              _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+                _vm._v("2")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("li", { staticClass: "page-item" }, [
+              _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+                _vm._v("3")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("li", { staticClass: "page-item" }, [
+              _c(
+                "a",
+                {
+                  staticClass: "page-link",
+                  attrs: { href: "#", "aria-label": "Next" }
+                },
+                [
+                  _c("span", { attrs: { "aria-hidden": "true" } }, [
+                    _vm._v("»")
+                  ]),
+                  _vm._v(" "),
+                  _c("span", { staticClass: "sr-only" }, [_vm._v("Next")])
+                ]
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -39387,20 +39540,48 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _vm._v(
-      "\n    " +
-        _vm._s(this.name) +
-        " " +
-        _vm._s(this.status) +
-        " Devices active: " +
-        _vm._s(this.devices.On) +
-        "/\n    " +
-        _vm._s(this.devices.On + this.devices.Off) +
-        ", " +
-        _vm._s(this.lastCommunication) +
-        "\n"
-    )
+  return _c("div", { staticClass: "card border-dark w-100" }, [
+    _c("div", { staticClass: "card-body" }, [
+      _c("div", { staticClass: "row card-title mb-0" }, [
+        _c("div", { staticClass: "col" }, [
+          _c("h5", [_vm._v(_vm._s(this.name))])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col text-right" }, [
+          _c(
+            "span",
+            { staticClass: "align-text-top badge", class: _vm.getBadgeClass },
+            [_vm._v(_vm._s(this.status))]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-subtitle" }, [
+        _c("span", { staticClass: "text-muted" }, [
+          _vm._v("Last communication: " + _vm._s(this.lastCommunication))
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-text" })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-footer text-muted" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col text-left" }, [
+          _vm._v("\n                Active devices\n            ")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col text-right" }, [
+          _vm._v(
+            "\n                " +
+              _vm._s(this.devices.On) +
+              "/" +
+              _vm._s(this.devices.On + this.devices.Off) +
+              "\n            "
+          )
+        ])
+      ])
+    ])
   ])
 }
 var staticRenderFns = []
@@ -39537,12 +39718,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticStyle: { border: "1px solid black" } },
-    [_c("h1", [_vm._v("Home")]), _vm._v(" "), _c("controller-list")],
-    1
-  )
+  return _c("div", [_c("controller-list")], 1)
 }
 var staticRenderFns = []
 render._withStripped = true

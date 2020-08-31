@@ -43,7 +43,7 @@
             </div>
         </nav>
 
-        <div class="container mt-6 mt-5 mb-4 pr-1 pl-1">
+        <div class="container-fluid mt-6 mb-4 pr-10 pl-10">
             <router-view></router-view>
         </div>
     </div>

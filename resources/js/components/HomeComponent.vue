@@ -1,6 +1,5 @@
 <template>
-    <div style="border:1px solid black;">
-        <h1>Home</h1>
+    <div>
         <controller-list></controller-list>
     </div>
 </template>
