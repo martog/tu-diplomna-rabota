@@ -1,5 +1,5 @@
 <template>
-    <div class="card border-dark w-100">
+    <div class="card w-100" :class="getBorderClass">
         <div class="card-body">
             <div class="row card-title mb-0">
                 <div class="col">
@@ -41,21 +41,23 @@ export default {
         name: String,
         status: String,
         lastCommunication: String,
-        devices: Object
+        devices: Object,
+        selected: Boolean
     },
     computed: {
         getBadgeClass() {
             if (this.status === "Online") {
-                return {
-                    "badge-success": true,
-                    "badge-danger": false
-                };
+                return ["badge-success"];
             }
 
-            return {
-                "badge-success": false,
-                "badge-danger": true
-            };
+            return ["badge-danger"];
+        },
+        getBorderClass() {
+            if (this.selected) {
+                return ["border-primary"];
+            }
+
+            return ["border-dark"];
         }
     }
 };

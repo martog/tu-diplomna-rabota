@@ -20,10 +20,8 @@ export default {
         token: localStorage.getItem("access_token") || null,
         user: JSON.parse(localStorage.getItem("user") || null),
         controllersData: JSON.parse(
-            localStorage.getItem("controllers_data")
-        ) || {
-            selectedPage: 1
-        }
+            localStorage.getItem("controllers_data") || null
+        )
     },
     getters: {
         loggedIn(state) {
@@ -33,6 +31,13 @@ export default {
             return state.user;
         },
         controllersData(state) {
+            if (!state.controllersData) {
+                return {
+                    selectedPage: 1,
+                    selectedControllerId: null
+                };
+            }
+
             return state.controllersData;
         }
     },
@@ -43,18 +48,21 @@ export default {
         retrieveToken(state, token) {
             state.token = token;
         },
-        destroyToken(state) {
-            state.token = null;
-        },
-        destroyUser(state) {
-            state.user = null;
-        },
         setControllersData(state, controllersData) {
             state.controllersData = controllersData;
             localStorage.setItem(
                 "controllers_data",
                 JSON.stringify(controllersData)
             );
+        },
+        destroyToken(state) {
+            state.token = null;
+        },
+        destroyUser(state) {
+            state.user = null;
+        },
+        destroyControllersData(state) {
+            state.controllersData = null;
         }
     },
     actions: {
@@ -106,9 +114,11 @@ export default {
                         .then(response => {
                             localStorage.removeItem("access_token");
                             localStorage.removeItem("user");
+                            localStorage.removeItem("controllers_data");
 
                             context.commit("destroyToken");
                             context.commit("destroyUser");
+                            context.commit("destroyControllersData");
 
                             console.log(response);
                             resolve(response);
@@ -116,9 +126,11 @@ export default {
                         .catch(error => {
                             localStorage.removeItem("access_token");
                             localStorage.removeItem("user");
+                            localStorage.removeItem("controllers_data");
 
                             context.commit("destroyToken");
                             context.commit("destroyUser");
+                            context.commit("destroyControllersData");
 
                             console.log(error);
                             reject(error);

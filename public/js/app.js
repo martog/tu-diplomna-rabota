@@ -2339,6 +2339,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2350,9 +2353,10 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       controllers: null,
-      loading: false,
+      loading: true,
       currentPage: 1,
-      totalPages: 1
+      totalPages: 1,
+      selectedControllerId: null
     };
   },
   methods: {
@@ -2362,22 +2366,41 @@ __webpack_require__.r(__webpack_exports__);
       console.log("start " + start + " stop " + stop + " total pages " + this.totalPages);
       return this.controllers.slice(start, stop);
     },
+    getSelectedControllersData: function getSelectedControllersData() {
+      return this.$store.getters.controllersData;
+    },
     setCurrentPage: function setCurrentPage(page) {
-      this.$store.commit("setControllersData", {
-        selectedPage: page
-      });
+      var data = this.getSelectedControllersData();
+      data.selectedPage = page;
+      this.$store.commit("setControllersData", data);
       this.currentPage = page;
+    },
+    setSelectedController: function setSelectedController(controllerId) {
+      var data = this.getSelectedControllersData();
+      data.selectedControllerId = controllerId;
+      this.$store.commit("setControllersData", data);
+      this.selectedControllerId = controllerId;
+    },
+    setup: function setup() {
+      var controllersData = this.$store.getters.controllersData;
+
+      if (!controllersData) {
+        return;
+      }
+
+      if (controllersData.selectedPage) {
+        this.currentPage = controllersData.selectedPage;
+      }
+
+      if (controllersData.selectedControllerId) {
+        this.selectedControllerId = controllersData.selectedControllerId;
+      }
     }
   },
   created: function created() {
     var _this = this;
 
-    var controllersData = this.$store.getters.controllersData;
-
-    if (controllersData.selectedPage) {
-      this.currentPage = controllersData.selectedPage;
-    }
-
+    this.setup();
     var controllersRequest = axios.get("/controllers");
     this.loading = true;
     controllersRequest.then(function (response) {
@@ -2450,21 +2473,23 @@ __webpack_require__.r(__webpack_exports__);
     name: String,
     status: String,
     lastCommunication: String,
-    devices: Object
+    devices: Object,
+    selected: Boolean
   },
   computed: {
     getBadgeClass: function getBadgeClass() {
       if (this.status === "Online") {
-        return {
-          "badge-success": true,
-          "badge-danger": false
-        };
+        return ["badge-success"];
       }
 
-      return {
-        "badge-success": false,
-        "badge-danger": true
-      };
+      return ["badge-danger"];
+    },
+    getBorderClass: function getBorderClass() {
+      if (this.selected) {
+        return ["border-primary"];
+      }
+
+      return ["border-dark"];
     }
   }
 });
@@ -7087,7 +7112,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".page-link[data-v-577415db]:hover {\n  cursor: pointer;\n}", ""]);
+exports.push([module.i, ".page-link[data-v-577415db]:hover {\n  cursor: pointer;\n}\n.custom-controller[data-v-577415db]:hover {\n  cursor: pointer;\n}", ""]);
 
 // exports
 
@@ -39528,10 +39553,20 @@ var render = function() {
           : _vm._l(this.getControllers(), function(controller, index) {
               return _c(
                 "div",
-                { key: index, staticClass: "col-3" },
+                {
+                  key: index,
+                  staticClass: "col-3",
+                  on: {
+                    click: function($event) {
+                      return _vm.setSelectedController(controller.id)
+                    }
+                  }
+                },
                 [
                   _c("controller-list-item", {
+                    staticClass: "custom-controller",
                     attrs: {
+                      selected: _vm.selectedControllerId === controller.id,
                       name: controller.name,
                       status: controller.status,
                       lastCommunication: controller.last_communication,
@@ -39675,7 +39710,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card border-dark w-100" }, [
+  return _c("div", { staticClass: "card w-100", class: _vm.getBorderClass }, [
     _c("div", { staticClass: "card-body" }, [
       _c("div", { staticClass: "row card-title mb-0" }, [
         _c("div", { staticClass: "col" }, [
@@ -57213,9 +57248,7 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.interceptors.request.use(function (
   state: {
     token: localStorage.getItem("access_token") || null,
     user: JSON.parse(localStorage.getItem("user") || null),
-    controllersData: JSON.parse(localStorage.getItem("controllers_data")) || {
-      selectedPage: 1
-    }
+    controllersData: JSON.parse(localStorage.getItem("controllers_data") || null)
   },
   getters: {
     loggedIn: function loggedIn(state) {
@@ -57225,6 +57258,13 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.interceptors.request.use(function (
       return state.user;
     },
     controllersData: function controllersData(state) {
+      if (!state.controllersData) {
+        return {
+          selectedPage: 1,
+          selectedControllerId: null
+        };
+      }
+
       return state.controllersData;
     }
   },
@@ -57235,15 +57275,18 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.interceptors.request.use(function (
     retrieveToken: function retrieveToken(state, token) {
       state.token = token;
     },
+    setControllersData: function setControllersData(state, controllersData) {
+      state.controllersData = controllersData;
+      localStorage.setItem("controllers_data", JSON.stringify(controllersData));
+    },
     destroyToken: function destroyToken(state) {
       state.token = null;
     },
     destroyUser: function destroyUser(state) {
       state.user = null;
     },
-    setControllersData: function setControllersData(state, controllersData) {
-      state.controllersData = controllersData;
-      localStorage.setItem("controllers_data", JSON.stringify(controllersData));
+    destroyControllersData: function destroyControllersData(state) {
+      state.controllersData = null;
     }
   },
   actions: {
@@ -57283,15 +57326,19 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.interceptors.request.use(function (
           axios__WEBPACK_IMPORTED_MODULE_0___default.a.post("/auth/logout").then(function (response) {
             localStorage.removeItem("access_token");
             localStorage.removeItem("user");
+            localStorage.removeItem("controllers_data");
             context.commit("destroyToken");
             context.commit("destroyUser");
+            context.commit("destroyControllersData");
             console.log(response);
             resolve(response);
           })["catch"](function (error) {
             localStorage.removeItem("access_token");
             localStorage.removeItem("user");
+            localStorage.removeItem("controllers_data");
             context.commit("destroyToken");
             context.commit("destroyUser");
+            context.commit("destroyControllersData");
             console.log(error);
             reject(error);
           });

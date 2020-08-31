@@ -9,9 +9,12 @@
                 v-else
                 v-for="(controller, index) in this.getControllers()"
                 :key="index"
+                @click="setSelectedController(controller.id)"
                 class="col-3"
             >
                 <controller-list-item
+                    class="custom-controller"
+                    :selected="selectedControllerId === controller.id"
                     :name="controller.name"
                     :status="controller.status"
                     :lastCommunication="controller.last_communication"
@@ -84,9 +87,10 @@ export default {
     data() {
         return {
             controllers: null,
-            loading: false,
+            loading: true,
             currentPage: 1,
-            totalPages: 1
+            totalPages: 1,
+            selectedControllerId: null
         };
     },
     methods: {
@@ -103,20 +107,41 @@ export default {
             );
             return this.controllers.slice(start, stop);
         },
+        getSelectedControllersData() {
+            return this.$store.getters.controllersData;
+        },
         setCurrentPage(page) {
-            this.$store.commit("setControllersData", {
-                selectedPage: page
-            });
+            let data = this.getSelectedControllersData();
+            data.selectedPage = page;
+
+            this.$store.commit("setControllersData", data);
             this.currentPage = page;
+        },
+        setSelectedController(controllerId) {
+            let data = this.getSelectedControllersData();
+            data.selectedControllerId = controllerId;
+
+            this.$store.commit("setControllersData", data);
+            this.selectedControllerId = controllerId;
+        },
+        setup() {
+            const controllersData = this.$store.getters.controllersData;
+            if (!controllersData) {
+                return;
+            }
+
+            if (controllersData.selectedPage) {
+                this.currentPage = controllersData.selectedPage;
+            }
+
+            if (controllersData.selectedControllerId) {
+                this.selectedControllerId =
+                    controllersData.selectedControllerId;
+            }
         }
     },
     created() {
-        const controllersData = this.$store.getters.controllersData;
-
-        if (controllersData.selectedPage) {
-            this.currentPage = controllersData.selectedPage;
-        }
-
+        this.setup();
         const controllersRequest = axios.get("/controllers");
 
         this.loading = true;
@@ -144,6 +169,9 @@ export default {
 
 <style lang="scss" scoped>
 .page-link:hover {
+    cursor: pointer;
+}
+.custom-controller:hover {
     cursor: pointer;
 }
 </style>
