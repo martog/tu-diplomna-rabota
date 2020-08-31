@@ -18,7 +18,12 @@ axios.interceptors.request.use(
 export default {
     state: {
         token: localStorage.getItem("access_token") || null,
-        user: JSON.parse(localStorage.getItem("user") || null)
+        user: JSON.parse(localStorage.getItem("user") || null),
+        controllersData: JSON.parse(
+            localStorage.getItem("controllers_data")
+        ) || {
+            selectedPage: 1
+        }
     },
     getters: {
         loggedIn(state) {
@@ -26,6 +31,9 @@ export default {
         },
         userData(state) {
             return state.user;
+        },
+        controllersData(state) {
+            return state.controllersData;
         }
     },
     mutations: {
@@ -40,6 +48,13 @@ export default {
         },
         destroyUser(state) {
             state.user = null;
+        },
+        setControllersData(state, controllersData) {
+            state.controllersData = controllersData;
+            localStorage.setItem(
+                "controllers_data",
+                JSON.stringify(controllersData)
+            );
         }
     },
     actions: {

@@ -2324,6 +2324,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2346,10 +2361,22 @@ __webpack_require__.r(__webpack_exports__);
       var stop = start + this.itemsPerPage;
       console.log("start " + start + " stop " + stop + " total pages " + this.totalPages);
       return this.controllers.slice(start, stop);
+    },
+    setCurrentPage: function setCurrentPage(page) {
+      this.$store.commit("setControllersData", {
+        selectedPage: page
+      });
+      this.currentPage = page;
     }
   },
   created: function created() {
     var _this = this;
+
+    var controllersData = this.$store.getters.controllersData;
+
+    if (controllersData.selectedPage) {
+      this.currentPage = controllersData.selectedPage;
+    }
 
     var controllersRequest = axios.get("/controllers");
     this.loading = true;
@@ -39531,35 +39558,91 @@ var render = function() {
                     "li",
                     {
                       staticClass: "page-item",
-                      attrs: { disabled: this.currentPage === 1 }
+                      class: {
+                        disabled: _vm.currentPage === 1
+                      }
                     },
-                    [_vm._m(0)]
-                  ),
-                  _vm._v(" "),
-                  _vm._l(this.totalPages, function(page) {
-                    return _c("li", { key: page, staticClass: "page-item" }, [
+                    [
                       _c(
                         "a",
                         {
                           staticClass: "page-link",
+                          attrs: { "aria-label": "Previous" },
                           on: {
                             click: function($event) {
-                              _vm.currentPage = page
+                              return _vm.setCurrentPage(_vm.currentPage - 1)
                             }
                           }
                         },
-                        [_vm._v(_vm._s(page))]
+                        [
+                          _c("span", { attrs: { "aria-hidden": "true" } }, [
+                            _vm._v("«")
+                          ]),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "sr-only" }, [
+                            _vm._v("Previous")
+                          ])
+                        ]
                       )
-                    ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _vm._l(_vm.totalPages, function(page) {
+                    return _c(
+                      "li",
+                      {
+                        key: page,
+                        staticClass: "page-item",
+                        class: { active: page === _vm.currentPage }
+                      },
+                      [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "page-link",
+                            on: {
+                              click: function($event) {
+                                return _vm.setCurrentPage(page)
+                              }
+                            }
+                          },
+                          [_vm._v(_vm._s(page))]
+                        )
+                      ]
+                    )
                   }),
                   _vm._v(" "),
                   _c(
                     "li",
                     {
                       staticClass: "page-item",
-                      attrs: { disabled: this.currentPage === this.totalPages }
+                      class: {
+                        disabled: _vm.currentPage === _vm.totalPages
+                      }
                     },
-                    [_vm._m(1)]
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "page-link",
+                          attrs: { "aria-label": "Next" },
+                          on: {
+                            click: function($event) {
+                              return _vm.setCurrentPage(_vm.currentPage + 1)
+                            }
+                          }
+                        },
+                        [
+                          _c("span", { attrs: { "aria-hidden": "true" } }, [
+                            _vm._v("»")
+                          ]),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "sr-only" }, [
+                            _vm._v("Next")
+                          ])
+                        ]
+                      )
+                    ]
                   )
                 ],
                 2
@@ -39570,36 +39653,7 @@ var render = function() {
       : _vm._e()
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      { staticClass: "page-link", attrs: { "aria-label": "Previous" } },
-      [
-        _c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("«")]),
-        _vm._v(" "),
-        _c("span", { staticClass: "sr-only" }, [_vm._v("Previous")])
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      { staticClass: "page-link", attrs: { href: "#", "aria-label": "Next" } },
-      [
-        _c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("»")]),
-        _vm._v(" "),
-        _c("span", { staticClass: "sr-only" }, [_vm._v("Next")])
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -57158,7 +57212,10 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.interceptors.request.use(function (
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: {
     token: localStorage.getItem("access_token") || null,
-    user: JSON.parse(localStorage.getItem("user") || null)
+    user: JSON.parse(localStorage.getItem("user") || null),
+    controllersData: JSON.parse(localStorage.getItem("controllers_data")) || {
+      selectedPage: 1
+    }
   },
   getters: {
     loggedIn: function loggedIn(state) {
@@ -57166,6 +57223,9 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.interceptors.request.use(function (
     },
     userData: function userData(state) {
       return state.user;
+    },
+    controllersData: function controllersData(state) {
+      return state.controllersData;
     }
   },
   mutations: {
@@ -57180,6 +57240,10 @@ axios__WEBPACK_IMPORTED_MODULE_0___default.a.interceptors.request.use(function (
     },
     destroyUser: function destroyUser(state) {
       state.user = null;
+    },
+    setControllersData: function setControllersData(state, controllersData) {
+      state.controllersData = controllersData;
+      localStorage.setItem("controllers_data", JSON.stringify(controllersData));
     }
   },
   actions: {

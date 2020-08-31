@@ -25,27 +25,42 @@
                     <ul class="pagination">
                         <li
                             class="page-item"
-                            :disabled="this.currentPage === 1"
+                            :class="{
+                                disabled: currentPage === 1
+                            }"
                         >
-                            <a class="page-link" aria-label="Previous">
+                            <a
+                                class="page-link"
+                                @click="setCurrentPage(currentPage - 1)"
+                                aria-label="Previous"
+                            >
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Previous</span>
                             </a>
                         </li>
                         <li
                             class="page-item"
-                            v-for="page in this.totalPages"
+                            :class="{ active: page === currentPage }"
+                            v-for="page in totalPages"
                             :key="page"
                         >
-                            <a class="page-link" @click="currentPage = page">{{
-                                page
-                            }}</a>
+                            <a
+                                class="page-link"
+                                @click="setCurrentPage(page)"
+                                >{{ page }}</a
+                            >
                         </li>
                         <li
                             class="page-item"
-                            :disabled="this.currentPage === this.totalPages"
+                            :class="{
+                                disabled: currentPage === totalPages
+                            }"
                         >
-                            <a class="page-link" href="#" aria-label="Next">
+                            <a
+                                class="page-link"
+                                @click="setCurrentPage(currentPage + 1)"
+                                aria-label="Next"
+                            >
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Next</span>
                             </a>
@@ -87,9 +102,21 @@ export default {
                     this.totalPages
             );
             return this.controllers.slice(start, stop);
+        },
+        setCurrentPage(page) {
+            this.$store.commit("setControllersData", {
+                selectedPage: page
+            });
+            this.currentPage = page;
         }
     },
     created() {
+        const controllersData = this.$store.getters.controllersData;
+
+        if (controllersData.selectedPage) {
+            this.currentPage = controllersData.selectedPage;
+        }
+
         const controllersRequest = axios.get("/controllers");
 
         this.loading = true;
