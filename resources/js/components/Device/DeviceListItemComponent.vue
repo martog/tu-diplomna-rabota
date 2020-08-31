@@ -1,27 +1,29 @@
 <template>
     <div class="container">
         <div class="row">
-            <div class="col-xl-2">
+            <div class="col-4">
                 <h5>Device:</h5>
                 <p>{{ deviceName }}</p>
             </div>
-            <div class="col-xl-4 text-right">
+            <div class="col-7">
                 <h5>Controller:</h5>
                 <p>{{ controllerName }}</p>
             </div>
-            <div class="col-xl-6 custom-control custom-switch">
+            <div class="col-1">
                 <h5>Status:</h5>
-                <input
-                    type="checkbox"
-                    class="custom-control-input"
-                    :checked="deviceActive"
-                    :id="deviceId"
-                    :disabled="deviceStatusLoading"
-                    @change="onDeviceStatusChange()"
-                />
-                <label class="custom-control-label" :for="deviceId">{{
-                    getDeviceStatus()
-                }}</label>
+                <div class="custom-control custom-switch">
+                    <input
+                        type="checkbox"
+                        class="custom-control custom-switch custom-control-input"
+                        :checked="deviceActive"
+                        :id="deviceId"
+                        :disabled="deviceStatusLoading"
+                        @change="onDeviceStatusChange()"
+                    />
+                    <label class="custom-control-label" :for="deviceId">{{
+                        getDeviceStatus()
+                    }}</label>
+                </div>
             </div>
         </div>
     </div>
@@ -63,6 +65,6 @@ export default {
 <style lang="scss" scoped>
 label {
     position: relative;
-    padding-left: 10.5em;
+    // padding-left: 10.5em;
 }
 </style>

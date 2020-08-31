@@ -57,7 +57,7 @@ export default {
                 return ["border-primary"];
             }
 
-            return ["border-dark"];
+            // return ["border-dark"];
         }
     }
 };

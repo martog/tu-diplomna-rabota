@@ -2341,7 +2341,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2382,7 +2381,7 @@ __webpack_require__.r(__webpack_exports__);
       this.selectedControllerId = controllerId;
     },
     setup: function setup() {
-      var controllersData = this.$store.getters.controllersData;
+      var controllersData = this.getSelectedControllersData();
 
       if (!controllersData) {
         return;
@@ -2487,9 +2486,8 @@ __webpack_require__.r(__webpack_exports__);
     getBorderClass: function getBorderClass() {
       if (this.selected) {
         return ["border-primary"];
-      }
+      } // return ["border-dark"];
 
-      return ["border-dark"];
     }
   }
 });
@@ -2539,11 +2537,13 @@ __webpack_require__.r(__webpack_exports__);
       loading: false
     };
   },
+  methods: {},
   created: function created() {
     var _this = this;
 
     this.loading = true;
-    var devicesRequest = axios.get("/controller/36/devices");
+    var url = "/controller/" + 36 + "/devices";
+    var devicesRequest = axios.get(url);
     devicesRequest.then(function (response) {
       _this.devices = response.data.map(function (item) {
         return {
@@ -2555,23 +2555,7 @@ __webpack_require__.r(__webpack_exports__);
       });
       console.log(_this.devices);
       _this.loading = false;
-    }); // setTimeout(() => {
-    //     this.devices = [
-    //         {
-    //             id: 1,
-    //             name: "Device 1 test",
-    //             status: "On",
-    //             controllerName: "Controller 1"
-    //         },
-    //         {
-    //             id: 2,
-    //             name: "Device 2",
-    //             status: "Off",
-    //             controllerName: "Controller 2"
-    //         }
-    //     ];
-    //     this.loading = false;
-    // }, 1000);
+    });
   },
   mounted: function mounted() {}
 });
@@ -2587,6 +2571,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -2661,6 +2647,10 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Controller_ControllerListComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Controller/ControllerListComponent */ "./resources/js/components/Controller/ControllerListComponent.vue");
+/* harmony import */ var _Device_DeviceListComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Device/DeviceListComponent */ "./resources/js/components/Device/DeviceListComponent.vue");
+//
+//
+//
 //
 //
 //
@@ -2668,9 +2658,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    ControllerList: _Controller_ControllerListComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
+    ControllerList: _Controller_ControllerListComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
+    DeviceList: _Device_DeviceListComponent__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   mounted: function mounted() {
     console.log("Component mounted.");
@@ -7119,6 +7111,25 @@ exports.push([module.i, ".page-link[data-v-577415db]:hover {\n  cursor: pointer;
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Device/DeviceListComponent.vue?vue&type=style&index=0&id=6ce8549b&lang=scss&scoped=true&":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/dist/cjs.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Device/DeviceListComponent.vue?vue&type=style&index=0&id=6ce8549b&lang=scss&scoped=true& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, ".custom-item[data-v-6ce8549b] {\n  background-color: rgba(0, 0, 0, 0.03);\n  border: 1px solid white;\n}", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Device/DeviceListItemComponent.vue?vue&type=style&index=0&id=560ead48&lang=scss&scoped=true&":
 /*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/dist/cjs.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Device/DeviceListItemComponent.vue?vue&type=style&index=0&id=560ead48&lang=scss&scoped=true& ***!
@@ -7131,7 +7142,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "label[data-v-560ead48] {\n  position: relative;\n  padding-left: 10.5em;\n}", ""]);
+exports.push([module.i, "label[data-v-560ead48] {\n  position: relative;\n}", ""]);
 
 // exports
 
@@ -38327,6 +38338,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Device/DeviceListComponent.vue?vue&type=style&index=0&id=6ce8549b&lang=scss&scoped=true&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/dist/cjs.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Device/DeviceListComponent.vue?vue&type=style&index=0&id=6ce8549b&lang=scss&scoped=true& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--7-2!../../../../node_modules/sass-loader/dist/cjs.js??ref--7-3!../../../../node_modules/vue-loader/lib??vue-loader-options!./DeviceListComponent.vue?vue&type=style&index=0&id=6ce8549b&lang=scss&scoped=true& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Device/DeviceListComponent.vue?vue&type=style&index=0&id=6ce8549b&lang=scss&scoped=true&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Device/DeviceListItemComponent.vue?vue&type=style&index=0&id=560ead48&lang=scss&scoped=true&":
 /*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/dist/cjs.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Device/DeviceListItemComponent.vue?vue&type=style&index=0&id=560ead48&lang=scss&scoped=true& ***!
@@ -39002,7 +39043,7 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "container-fluid mt-6 mb-4 pr-10 pl-10" },
+      { staticClass: "container mt-6 mb-4 pr-10 pl-10" },
       [_c("router-view")],
       1
     )
@@ -39542,8 +39583,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h1", [_vm._v("My Controllers")]),
-    _vm._v(" "),
     _c(
       "div",
       { staticClass: "row mb-2" },
@@ -39555,7 +39594,7 @@ var render = function() {
                 "div",
                 {
                   key: index,
-                  staticClass: "col-3",
+                  staticClass: "col-4",
                   on: {
                     click: function($event) {
                       return _vm.setSelectedController(controller.id)
@@ -39785,7 +39824,7 @@ var render = function() {
           _vm._l(_vm.devices, function(device) {
             return _c(
               "li",
-              { key: device.id, staticClass: "list-group-item" },
+              { key: device.id, staticClass: "list-group-item custom-item" },
               [
                 _c("device-list-item", {
                   attrs: {
@@ -39827,41 +39866,46 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-xl-2" }, [
+      _c("div", { staticClass: "col-4" }, [
         _c("h5", [_vm._v("Device:")]),
         _vm._v(" "),
         _c("p", [_vm._v(_vm._s(_vm.deviceName))])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-xl-4 text-right" }, [
+      _c("div", { staticClass: "col-7" }, [
         _c("h5", [_vm._v("Controller:")]),
         _vm._v(" "),
         _c("p", [_vm._v(_vm._s(_vm.controllerName))])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-xl-6 custom-control custom-switch" }, [
+      _c("div", { staticClass: "col-1" }, [
         _c("h5", [_vm._v("Status:")]),
         _vm._v(" "),
-        _c("input", {
-          staticClass: "custom-control-input",
-          attrs: {
-            type: "checkbox",
-            id: _vm.deviceId,
-            disabled: _vm.deviceStatusLoading
-          },
-          domProps: { checked: _vm.deviceActive },
-          on: {
-            change: function($event) {
-              return _vm.onDeviceStatusChange()
+        _c("div", { staticClass: "custom-control custom-switch" }, [
+          _c("input", {
+            staticClass: "custom-control custom-switch custom-control-input",
+            attrs: {
+              type: "checkbox",
+              id: _vm.deviceId,
+              disabled: _vm.deviceStatusLoading
+            },
+            domProps: { checked: _vm.deviceActive },
+            on: {
+              change: function($event) {
+                return _vm.onDeviceStatusChange()
+              }
             }
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "label",
-          { staticClass: "custom-control-label", attrs: { for: _vm.deviceId } },
-          [_vm._v(_vm._s(_vm.getDeviceStatus()))]
-        )
+          }),
+          _vm._v(" "),
+          _c(
+            "label",
+            {
+              staticClass: "custom-control-label",
+              attrs: { for: _vm.deviceId }
+            },
+            [_vm._v(_vm._s(_vm.getDeviceStatus()))]
+          )
+        ])
       ])
     ])
   ])
@@ -39888,7 +39932,19 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_c("controller-list", { attrs: { itemsPerPage: 4 } })], 1)
+  return _c(
+    "div",
+    [
+      _c("h2", [_vm._v("Controllers")]),
+      _vm._v(" "),
+      _c("controller-list", { attrs: { itemsPerPage: 3 } }),
+      _vm._v(" "),
+      _c("h2", { staticClass: "mt-5" }, [_vm._v("Devices")]),
+      _vm._v(" "),
+      _c("device-list")
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -56940,7 +56996,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DeviceListComponent_vue_vue_type_template_id_6ce8549b_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DeviceListComponent.vue?vue&type=template&id=6ce8549b&scoped=true& */ "./resources/js/components/Device/DeviceListComponent.vue?vue&type=template&id=6ce8549b&scoped=true&");
 /* harmony import */ var _DeviceListComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DeviceListComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/Device/DeviceListComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _DeviceListComponent_vue_vue_type_style_index_0_id_6ce8549b_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DeviceListComponent.vue?vue&type=style&index=0&id=6ce8549b&lang=scss&scoped=true& */ "./resources/js/components/Device/DeviceListComponent.vue?vue&type=style&index=0&id=6ce8549b&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -56948,7 +57006,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _DeviceListComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _DeviceListComponent_vue_vue_type_template_id_6ce8549b_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
   _DeviceListComponent_vue_vue_type_template_id_6ce8549b_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -56977,6 +57035,22 @@ component.options.__file = "resources/js/components/Device/DeviceListComponent.v
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DeviceListComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./DeviceListComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Device/DeviceListComponent.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DeviceListComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Device/DeviceListComponent.vue?vue&type=style&index=0&id=6ce8549b&lang=scss&scoped=true&":
+/*!**************************************************************************************************************************!*\
+  !*** ./resources/js/components/Device/DeviceListComponent.vue?vue&type=style&index=0&id=6ce8549b&lang=scss&scoped=true& ***!
+  \**************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DeviceListComponent_vue_vue_type_style_index_0_id_6ce8549b_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--7-2!../../../../node_modules/sass-loader/dist/cjs.js??ref--7-3!../../../../node_modules/vue-loader/lib??vue-loader-options!./DeviceListComponent.vue?vue&type=style&index=0&id=6ce8549b&lang=scss&scoped=true& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Device/DeviceListComponent.vue?vue&type=style&index=0&id=6ce8549b&lang=scss&scoped=true&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DeviceListComponent_vue_vue_type_style_index_0_id_6ce8549b_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DeviceListComponent_vue_vue_type_style_index_0_id_6ce8549b_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DeviceListComponent_vue_vue_type_style_index_0_id_6ce8549b_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DeviceListComponent_vue_vue_type_style_index_0_id_6ce8549b_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_DeviceListComponent_vue_vue_type_style_index_0_id_6ce8549b_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default.a); 
 
 /***/ }),
 

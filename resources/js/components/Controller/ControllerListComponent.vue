@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h1>My Controllers</h1>
         <div class="row mb-2">
             <div class="col" v-if="this.loading">
                 <p>Loading</p>
@@ -10,7 +9,7 @@
                 v-for="(controller, index) in this.getControllers()"
                 :key="index"
                 @click="setSelectedController(controller.id)"
-                class="col-3"
+                class="col-4"
             >
                 <controller-list-item
                     class="custom-controller"
@@ -125,7 +124,7 @@ export default {
             this.selectedControllerId = controllerId;
         },
         setup() {
-            const controllersData = this.$store.getters.controllersData;
+            const controllersData = this.getSelectedControllersData();
             if (!controllersData) {
                 return;
             }

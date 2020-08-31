@@ -5,7 +5,7 @@
     <div v-else>
         <ul class="list-group list-group-flush">
             <li
-                class="list-group-item"
+                class="list-group-item custom-item"
                 v-for="device in devices"
                 v-bind:key="device.id"
             >
@@ -32,9 +32,11 @@ export default {
             loading: false
         };
     },
+    methods: {},
     created() {
         this.loading = true;
-        const devicesRequest = axios.get("/controller/36/devices");
+        const url = "/controller/" + 36 + "/devices";
+        const devicesRequest = axios.get(url);
 
         devicesRequest.then(response => {
             this.devices = response.data.map(item => {
@@ -48,27 +50,14 @@ export default {
             console.log(this.devices);
             this.loading = false;
         });
-
-        // setTimeout(() => {
-        //     this.devices = [
-        //         {
-        //             id: 1,
-        //             name: "Device 1 test",
-        //             status: "On",
-        //             controllerName: "Controller 1"
-        //         },
-        //         {
-        //             id: 2,
-        //             name: "Device 2",
-        //             status: "Off",
-        //             controllerName: "Controller 2"
-        //         }
-        //     ];
-        //     this.loading = false;
-        // }, 1000);
     },
     mounted() {}
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.custom-item {
+    background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgb(255 255 255);
+}
+</style>
