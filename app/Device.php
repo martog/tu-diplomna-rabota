@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Device extends Model
@@ -32,5 +33,15 @@ class Device extends Model
         )
             ->join("controllers", "devices.controller_id", "=", "controllers.id")
             ->where("controllers.id", $controllerId);
+    }
+
+    public function getCreatedAtAttribute($date)
+    {
+        return (new Carbon($date))->toDateTimeString();
+    }
+
+    public function getUpdatedAtAttribute($date)
+    {
+        return (new Carbon($date))->toDateTimeString();
     }
 }

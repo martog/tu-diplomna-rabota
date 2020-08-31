@@ -22,11 +22,20 @@
                         :checked="deviceActive"
                         :id="deviceId"
                         :disabled="deviceStatusLoading"
-                        @change="onDeviceStatusChange()"
+                        @change="onDeviceStatusChange(deviceId)"
                     />
-                    <label class="custom-control-label" :for="deviceId">{{
-                        getDeviceStatus()
-                    }}</label>
+                    <label class="custom-control-label" :for="deviceId">
+                        <div
+                            v-if="deviceStatusLoading"
+                            class="spinner-border text-primary spinner-border-sm"
+                            role="status"
+                        >
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <div v-else>
+                            {{ getDeviceStatus() }}
+                        </div>
+                    </label>
                 </div>
             </div>
         </div>
@@ -39,29 +48,44 @@ export default {
         deviceId: Number,
         deviceName: String,
         deviceStatus: String,
-        deviceLastUpdated: String,
+        deviceLastUpdatedProp: String,
         controllerName: String
     },
     data() {
         return {
             deviceActive: this.isDeviceActive(),
+            deviceLastUpdated: "",
             deviceStatusLoading: false
         };
     },
-    mounted() {},
+    created() {
+        this.deviceLastUpdated = this.deviceLastUpdatedProp;
+    },
     methods: {
         isDeviceActive() {
             return this.deviceStatus === "On" ? true : false;
         },
-        getDeviceStatus(data) {
+        getDeviceStatus() {
             return this.deviceActive ? "On" : "Off";
         },
-        onDeviceStatusChange() {
+        onDeviceStatusChange(deviceId) {
+            console.log(status);
             this.deviceStatusLoading = true;
-            setTimeout(() => {
-                this.deviceActive = !this.deviceActive;
-                this.deviceStatusLoading = false;
-            }, 2000);
+
+            const statusToSet = this.deviceActive ? "Off" : "On";
+            const url = `controller/devices/${deviceId}/status/${statusToSet}`;
+            const setDeviceStatusRequest = axios.post(url);
+            setDeviceStatusRequest
+                .then(response => {
+                    this.deviceActive =
+                        response.data.status === "On" ? true : false;
+                    this.deviceLastUpdated = response.data.updated_at;
+                    this.deviceStatusLoading = false;
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.deviceStatusLoading = false;
+                });
         }
     }
 };
@@ -70,6 +94,5 @@ export default {
 <style lang="scss" scoped>
 label {
     position: relative;
-    // padding-left: 10.5em;
 }
 </style>

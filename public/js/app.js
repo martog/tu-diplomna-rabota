@@ -2599,36 +2599,56 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     deviceId: Number,
     deviceName: String,
     deviceStatus: String,
-    deviceLastUpdated: String,
+    deviceLastUpdatedProp: String,
     controllerName: String
   },
   data: function data() {
     return {
       deviceActive: this.isDeviceActive(),
+      deviceLastUpdated: "",
       deviceStatusLoading: false
     };
   },
-  mounted: function mounted() {},
+  created: function created() {
+    this.deviceLastUpdated = this.deviceLastUpdatedProp;
+  },
   methods: {
     isDeviceActive: function isDeviceActive() {
       return this.deviceStatus === "On" ? true : false;
     },
-    getDeviceStatus: function getDeviceStatus(data) {
+    getDeviceStatus: function getDeviceStatus() {
       return this.deviceActive ? "On" : "Off";
     },
-    onDeviceStatusChange: function onDeviceStatusChange() {
+    onDeviceStatusChange: function onDeviceStatusChange(deviceId) {
       var _this = this;
 
+      console.log(status);
       this.deviceStatusLoading = true;
-      setTimeout(function () {
-        _this.deviceActive = !_this.deviceActive;
+      var statusToSet = this.deviceActive ? "Off" : "On";
+      var url = "controller/devices/".concat(deviceId, "/status/").concat(statusToSet);
+      var setDeviceStatusRequest = axios.post(url);
+      setDeviceStatusRequest.then(function (response) {
+        _this.deviceActive = response.data.status === "On" ? true : false;
+        _this.deviceLastUpdated = response.data.updated_at;
         _this.deviceStatusLoading = false;
-      }, 2000);
+      })["catch"](function (error) {
+        console.log(error);
+        _this.deviceStatusLoading = false;
+      });
     }
   }
 });
@@ -39829,7 +39849,7 @@ var render = function() {
                     "device-id": device.id,
                     "device-name": device.name,
                     "device-status": device.status,
-                    "device-last-updated": device.last_updated,
+                    "device-last-updated-prop": device.last_updated,
                     "controller-name": device.controller_name
                   }
                 })
@@ -39897,7 +39917,7 @@ var render = function() {
             domProps: { checked: _vm.deviceActive },
             on: {
               change: function($event) {
-                return _vm.onDeviceStatusChange()
+                return _vm.onDeviceStatusChange(_vm.deviceId)
               }
             }
           }),
@@ -39908,7 +39928,29 @@ var render = function() {
               staticClass: "custom-control-label",
               attrs: { for: _vm.deviceId }
             },
-            [_vm._v(_vm._s(_vm.getDeviceStatus()))]
+            [
+              _vm.deviceStatusLoading
+                ? _c(
+                    "div",
+                    {
+                      staticClass:
+                        "spinner-border text-primary spinner-border-sm",
+                      attrs: { role: "status" }
+                    },
+                    [
+                      _c("span", { staticClass: "sr-only" }, [
+                        _vm._v("Loading...")
+                      ])
+                    ]
+                  )
+                : _c("div", [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.getDeviceStatus()) +
+                        "\n                    "
+                    )
+                  ])
+            ]
           )
         ])
       ])

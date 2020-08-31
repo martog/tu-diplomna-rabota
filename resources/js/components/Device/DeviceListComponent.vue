@@ -13,7 +13,7 @@
                     :device-id="device.id"
                     :device-name="device.name"
                     :device-status="device.status"
-                    :device-last-updated="device.last_updated"
+                    :device-last-updated-prop="device.last_updated"
                     :controller-name="device.controller_name"
                 ></device-list-item>
             </li>
