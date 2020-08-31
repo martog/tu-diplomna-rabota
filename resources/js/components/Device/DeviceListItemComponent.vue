@@ -1,13 +1,17 @@
 <template>
     <div class="container">
         <div class="row">
-            <div class="col-4">
+            <div class="col-3">
                 <h5>Device:</h5>
                 <p>{{ deviceName }}</p>
             </div>
-            <div class="col-7">
+            <div class="col-4">
                 <h5>Controller:</h5>
                 <p>{{ controllerName }}</p>
+            </div>
+            <div class="col-4">
+                <h5>Last updated:</h5>
+                <p>{{ deviceLastUpdated }}</p>
             </div>
             <div class="col-1">
                 <h5>Status:</h5>
@@ -35,6 +39,7 @@ export default {
         deviceId: Number,
         deviceName: String,
         deviceStatus: String,
+        deviceLastUpdated: String,
         controllerName: String
     },
     data() {

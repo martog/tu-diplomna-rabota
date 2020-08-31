@@ -221,7 +221,8 @@ class DeviceController extends Controller
             return new JsonResponse("Controller not found!", 404);
         }
 
-        return new JsonResponse($controller->devices()->get(), 200);
+        $devices = Device::getByControllerId($controller->id)->get();
+        return new JsonResponse($devices, 200);
     }
 
     public function getControllers()

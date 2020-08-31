@@ -2526,6 +2526,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2545,15 +2546,7 @@ __webpack_require__.r(__webpack_exports__);
     var url = "/controller/" + 36 + "/devices";
     var devicesRequest = axios.get(url);
     devicesRequest.then(function (response) {
-      _this.devices = response.data.map(function (item) {
-        return {
-          id: item.id,
-          name: item.name,
-          status: item.status,
-          controllerName: item.controller_id.toString()
-        };
-      });
-      console.log(_this.devices);
+      _this.devices = response.data;
       _this.loading = false;
     });
   },
@@ -2602,11 +2595,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     deviceId: Number,
     deviceName: String,
     deviceStatus: String,
+    deviceLastUpdated: String,
     controllerName: String
   },
   data: function data() {
@@ -39831,7 +39829,8 @@ var render = function() {
                     "device-id": device.id,
                     "device-name": device.name,
                     "device-status": device.status,
-                    "controller-name": device.controllerName
+                    "device-last-updated": device.last_updated,
+                    "controller-name": device.controller_name
                   }
                 })
               ],
@@ -39866,16 +39865,22 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-4" }, [
+      _c("div", { staticClass: "col-3" }, [
         _c("h5", [_vm._v("Device:")]),
         _vm._v(" "),
         _c("p", [_vm._v(_vm._s(_vm.deviceName))])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-7" }, [
+      _c("div", { staticClass: "col-4" }, [
         _c("h5", [_vm._v("Controller:")]),
         _vm._v(" "),
         _c("p", [_vm._v(_vm._s(_vm.controllerName))])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-4" }, [
+        _c("h5", [_vm._v("Last updated:")]),
+        _vm._v(" "),
+        _c("p", [_vm._v(_vm._s(_vm.deviceLastUpdated))])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-1" }, [

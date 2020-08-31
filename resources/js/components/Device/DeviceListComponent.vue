@@ -13,7 +13,8 @@
                     :device-id="device.id"
                     :device-name="device.name"
                     :device-status="device.status"
-                    :controller-name="device.controllerName"
+                    :device-last-updated="device.last_updated"
+                    :controller-name="device.controller_name"
                 ></device-list-item>
             </li>
         </ul>
@@ -39,15 +40,7 @@ export default {
         const devicesRequest = axios.get(url);
 
         devicesRequest.then(response => {
-            this.devices = response.data.map(item => {
-                return {
-                    id: item.id,
-                    name: item.name,
-                    status: item.status,
-                    controllerName: item.controller_id.toString()
-                };
-            });
-            console.log(this.devices);
+            this.devices = response.data;
             this.loading = false;
         });
     },

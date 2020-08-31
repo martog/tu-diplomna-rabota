@@ -19,4 +19,18 @@ class Device extends Model
     {
         return $this->belongsTo('App\User')->first();
     }
+
+    public static function getByControllerId($controllerId)
+    {
+        return self::select(
+            "devices.id",
+            "devices.name",
+            "devices.status",
+            "devices.updated_at as last_updated",
+            "controllers.id as controller_id",
+            "controllers.name as controller_name"
+        )
+            ->join("controllers", "devices.controller_id", "=", "controllers.id")
+            ->where("controllers.id", $controllerId);
+    }
 }
