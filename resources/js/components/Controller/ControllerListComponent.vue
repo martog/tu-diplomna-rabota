@@ -1,8 +1,10 @@
 <template>
     <div>
         <div class="row mb-2">
-            <div class="col" v-if="this.loading">
-                <p>Loading</p>
+            <div class="col text-center" v-if="this.loading">
+                <div class="spinner-border text-dark" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
             </div>
             <div
                 v-else
@@ -81,7 +83,16 @@ export default {
         ControllerListItem
     },
     props: {
-        itemsPerPage: Number
+        itemsPerPage: Number,
+        deviceStatusChange: {
+            deviceId: Number,
+            status: Boolean
+        }
+    },
+    watch: {
+        deviceStatusChange: function(newVal, oldVal) {
+            this.retrieveControllers();
+        }
     },
     data() {
         return {
@@ -93,6 +104,28 @@ export default {
         };
     },
     methods: {
+        retrieveControllers() {
+            const controllersRequest = axios.get("/controllers");
+
+            controllersRequest
+                .then(response => {
+                    this.controllers = response.data;
+
+                    if (this.controllers.length) {
+                        this.totalPages = Math.ceil(
+                            this.controllers.length / this.itemsPerPage
+                        );
+                    }
+
+                    console.log(this.controllers);
+                    this.loading = false;
+                })
+                .catch(error => {
+                    this.controllers = [];
+                    this.loading = false;
+                    console.log(error);
+                });
+        },
         getControllers() {
             const start = (this.currentPage - 1) * this.itemsPerPage;
             const stop = start + this.itemsPerPage;
@@ -146,27 +179,8 @@ export default {
     },
     created() {
         this.setup();
-        const controllersRequest = axios.get("/controllers");
-
         this.loading = true;
-        controllersRequest
-            .then(response => {
-                this.controllers = response.data;
-
-                if (this.controllers.length) {
-                    this.totalPages = Math.ceil(
-                        this.controllers.length / this.itemsPerPage
-                    );
-                }
-
-                console.log(this.controllers);
-                this.loading = false;
-            })
-            .catch(error => {
-                this.controllers = [];
-                this.loading = false;
-                console.log(error);
-            });
+        this.retrieveControllers();
     }
 };
 </script>
@@ -177,5 +191,15 @@ export default {
 }
 .custom-controller:hover {
     cursor: pointer;
+}
+.page-item .page-link {
+    //background-color: #343a40;
+
+    color: #212529;
+}
+.page-item.active .page-link {
+    color: #fff;
+    background-color: #53a5db;
+    border-color: #53a5db;
 }
 </style>

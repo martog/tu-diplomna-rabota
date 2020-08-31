@@ -1,6 +1,10 @@
 <template>
     <div v-if="loading">
-        Loding...
+        <div class="col text-center" v-if="this.loading">
+            <div class="spinner-border text-dark" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
     </div>
     <div v-else>
         <ul class="list-group list-group-flush">
@@ -22,6 +26,7 @@
                         :device-status="device.status"
                         :device-last-updated-prop="device.last_updated"
                         :controller-name="device.controller_name"
+                        @changedDeviceStatus="onDeviceStatusChanged"
                     ></device-list-item>
                 </li>
             </div>
@@ -50,6 +55,9 @@ export default {
         };
     },
     methods: {
+        onDeviceStatusChanged(deviceStatus) {
+            this.$emit("changedDeviceStatus", deviceStatus);
+        },
         retrieveDevices(controllerId) {
             this.loading = true;
             if (!controllerId) {

@@ -19,10 +19,10 @@
                     <input
                         type="checkbox"
                         class="custom-control custom-switch custom-control-input"
-                        :checked="deviceActive"
                         :id="deviceId"
                         :disabled="deviceStatusLoading"
-                        @change="onDeviceStatusChange(deviceId)"
+                        :checked="deviceActive"
+                        v-on:click="onDeviceStatusChange(deviceId)"
                     />
                     <label class="custom-control-label" :for="deviceId">
                         <div
@@ -55,7 +55,9 @@ export default {
         return {
             deviceActive: this.isDeviceActive(),
             deviceLastUpdated: "",
-            deviceStatusLoading: false
+            deviceStatusLoading: false,
+            deviceStatusNotChangedErrMsg:
+                "Device status not changed. Check connection!"
         };
     },
     created() {
@@ -69,21 +71,34 @@ export default {
             return this.deviceActive ? "On" : "Off";
         },
         onDeviceStatusChange(deviceId) {
-            console.log(status);
             this.deviceStatusLoading = true;
 
             const statusToSet = this.deviceActive ? "Off" : "On";
             const url = `controller/devices/${deviceId}/status/${statusToSet}`;
             const setDeviceStatusRequest = axios.post(url);
+
+            this.deviceActive = !this.deviceActive;
             setDeviceStatusRequest
                 .then(response => {
-                    this.deviceActive =
-                        response.data.status === "On" ? true : false;
                     this.deviceLastUpdated = response.data.updated_at;
                     this.deviceStatusLoading = false;
+
+                    if (this.getDeviceStatus() !== response.data.status) {
+                        throw new Error(this.deviceStatusNotChangedErrMsg);
+                    }
+
+                    this.$emit("changedDeviceStatus", {
+                        deviceId: deviceId,
+                        status: this.deviceActive
+                    });
                 })
                 .catch(error => {
                     console.log(error);
+                    this.deviceActive = !this.deviceActive;
+                    this.$emit("changedDeviceStatus", {
+                        deviceId: deviceId,
+                        status: this.deviceActive
+                    });
                     this.deviceStatusLoading = false;
                 });
         }

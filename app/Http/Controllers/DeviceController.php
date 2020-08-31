@@ -180,6 +180,14 @@ class DeviceController extends Controller
             return new JsonResponse("Internal Server Error", 500);
         }
 
+        if (isset($response["code"]) && $response["code"] == 408) {
+            $controller = $device->controller();
+            $controller->status = "Offline";
+            $controller->save();
+
+            return new JsonResponse($response["message"], $response["code"]);
+        }
+
         if (isset($response["code"]) && $response["code"] != 200) {
             return new JsonResponse($response["message"], $response["code"]);
         }

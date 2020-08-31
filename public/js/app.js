@@ -2341,13 +2341,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     ControllerListItem: _ControllerListItemComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   props: {
-    itemsPerPage: Number
+    itemsPerPage: Number,
+    deviceStatusChange: {
+      deviceId: Number,
+      status: Boolean
+    }
+  },
+  watch: {
+    deviceStatusChange: function deviceStatusChange(newVal, oldVal) {
+      this.retrieveControllers();
+    }
   },
   data: function data() {
     return {
@@ -2359,6 +2370,25 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    retrieveControllers: function retrieveControllers() {
+      var _this = this;
+
+      var controllersRequest = axios.get("/controllers");
+      controllersRequest.then(function (response) {
+        _this.controllers = response.data;
+
+        if (_this.controllers.length) {
+          _this.totalPages = Math.ceil(_this.controllers.length / _this.itemsPerPage);
+        }
+
+        console.log(_this.controllers);
+        _this.loading = false;
+      })["catch"](function (error) {
+        _this.controllers = [];
+        _this.loading = false;
+        console.log(error);
+      });
+    },
     getControllers: function getControllers() {
       var start = (this.currentPage - 1) * this.itemsPerPage;
       var stop = start + this.itemsPerPage;
@@ -2399,25 +2429,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    var _this = this;
-
     this.setup();
-    var controllersRequest = axios.get("/controllers");
     this.loading = true;
-    controllersRequest.then(function (response) {
-      _this.controllers = response.data;
-
-      if (_this.controllers.length) {
-        _this.totalPages = Math.ceil(_this.controllers.length / _this.itemsPerPage);
-      }
-
-      console.log(_this.controllers);
-      _this.loading = false;
-    })["catch"](function (error) {
-      _this.controllers = [];
-      _this.loading = false;
-      console.log(error);
-    });
+    this.retrieveControllers();
   }
 });
 
@@ -2537,6 +2551,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2557,6 +2576,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    onDeviceStatusChanged: function onDeviceStatusChanged(deviceStatus) {
+      this.$emit("changedDeviceStatus", deviceStatus);
+    },
     retrieveDevices: function retrieveDevices(controllerId) {
       var _this = this;
 
@@ -2648,7 +2670,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       deviceActive: this.isDeviceActive(),
       deviceLastUpdated: "",
-      deviceStatusLoading: false
+      deviceStatusLoading: false,
+      deviceStatusNotChangedErrMsg: "Device status not changed. Check connection!"
     };
   },
   created: function created() {
@@ -2664,17 +2687,32 @@ __webpack_require__.r(__webpack_exports__);
     onDeviceStatusChange: function onDeviceStatusChange(deviceId) {
       var _this = this;
 
-      console.log(status);
       this.deviceStatusLoading = true;
       var statusToSet = this.deviceActive ? "Off" : "On";
       var url = "controller/devices/".concat(deviceId, "/status/").concat(statusToSet);
       var setDeviceStatusRequest = axios.post(url);
+      this.deviceActive = !this.deviceActive;
       setDeviceStatusRequest.then(function (response) {
-        _this.deviceActive = response.data.status === "On" ? true : false;
         _this.deviceLastUpdated = response.data.updated_at;
         _this.deviceStatusLoading = false;
+
+        if (_this.getDeviceStatus() !== response.data.status) {
+          throw new Error(_this.deviceStatusNotChangedErrMsg);
+        }
+
+        _this.$emit("changedDeviceStatus", {
+          deviceId: deviceId,
+          status: _this.deviceActive
+        });
       })["catch"](function (error) {
         console.log(error);
+        _this.deviceActive = !_this.deviceActive;
+
+        _this.$emit("changedDeviceStatus", {
+          deviceId: deviceId,
+          status: _this.deviceActive
+        });
+
         _this.deviceStatusLoading = false;
       });
     }
@@ -2706,6 +2744,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2715,7 +2766,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      selectedControllerId: null
+      selectedControllerId: null,
+      deviceStatusChange: null
     };
   },
   mounted: function mounted() {
@@ -2723,9 +2775,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     onSelectedControllerChange: function onSelectedControllerChange(controllerId) {
-      console.log("selectedControllerChanged");
       this.selectedControllerId = controllerId;
-      console.log(this.selectedControllerId);
+    },
+    onDeviceStatusChange: function onDeviceStatusChange(deviceStatus) {
+      this.deviceStatusChange = deviceStatus;
     }
   },
   created: function created() {}
@@ -7165,7 +7218,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, ".page-link[data-v-577415db]:hover {\n  cursor: pointer;\n}\n.custom-controller[data-v-577415db]:hover {\n  cursor: pointer;\n}", ""]);
+exports.push([module.i, ".page-link[data-v-577415db]:hover {\n  cursor: pointer;\n}\n.custom-controller[data-v-577415db]:hover {\n  cursor: pointer;\n}\n.page-item .page-link[data-v-577415db] {\n  color: #212529;\n}\n.page-item.active .page-link[data-v-577415db] {\n  color: #fff;\n  background-color: #53a5db;\n  border-color: #53a5db;\n}", ""]);
 
 // exports
 
@@ -39649,7 +39702,7 @@ var render = function() {
       { staticClass: "row mb-2" },
       [
         this.loading
-          ? _c("div", { staticClass: "col" }, [_c("p", [_vm._v("Loading")])])
+          ? _c("div", { staticClass: "col text-center" }, [_vm._m(0)])
           : _vm._l(this.getControllers(), function(controller, index) {
               return _c(
                 "div",
@@ -39788,7 +39841,18 @@ var render = function() {
       : _vm._e()
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "spinner-border text-dark", attrs: { role: "status" } },
+      [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -39877,7 +39941,11 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _vm.loading
-    ? _c("div", [_vm._v("\n    Loding...\n")])
+    ? _c("div", [
+        this.loading
+          ? _c("div", { staticClass: "col text-center" }, [_vm._m(0)])
+          : _vm._e()
+      ])
     : _c("div", [
         _c("ul", { staticClass: "list-group list-group-flush" }, [
           !_vm.controllerId
@@ -39906,7 +39974,8 @@ var render = function() {
                           "device-status": device.status,
                           "device-last-updated-prop": device.last_updated,
                           "controller-name": device.controller_name
-                        }
+                        },
+                        on: { changedDeviceStatus: _vm.onDeviceStatusChanged }
                       })
                     ],
                     1
@@ -39918,7 +39987,18 @@ var render = function() {
         ])
       ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "spinner-border text-dark", attrs: { role: "status" } },
+      [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -39973,7 +40053,7 @@ var render = function() {
             },
             domProps: { checked: _vm.deviceActive },
             on: {
-              change: function($event) {
+              click: function($event) {
                 return _vm.onDeviceStatusChange(_vm.deviceId)
               }
             }
@@ -40039,23 +40119,46 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("h2", [_vm._v("Controllers")]),
+      _vm._m(0),
       _vm._v(" "),
       _c("controller-list", {
-        attrs: { itemsPerPage: 3 },
+        attrs: {
+          "device-status-change": this.deviceStatusChange,
+          itemsPerPage: 3
+        },
         on: { changedSelectedController: _vm.onSelectedControllerChange }
       }),
       _vm._v(" "),
       _c("h2", { staticClass: "mt-5" }, [_vm._v("Devices")]),
       _vm._v(" "),
       _c("device-list", {
-        attrs: { "controller-id": this.selectedControllerId }
+        attrs: { "controller-id": this.selectedControllerId },
+        on: { changedDeviceStatus: _vm.onDeviceStatusChange }
       })
     ],
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-xs-2" }, [
+        _c("h2", [_vm._v("Controllers")])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-2" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-outline-dark", attrs: { type: "button" } },
+          [_c("h6", { staticClass: "mb-0 mt-0" }, [_vm._v("Add")])]
+        )
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
