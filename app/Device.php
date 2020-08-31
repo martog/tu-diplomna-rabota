@@ -32,7 +32,8 @@ class Device extends Model
             "controllers.name as controller_name"
         )
             ->join("controllers", "devices.controller_id", "=", "controllers.id")
-            ->where("controllers.id", $controllerId);
+            ->where("controllers.id", $controllerId)
+            ->orderBy("devices.name");
     }
 
     public function getCreatedAtAttribute($date)

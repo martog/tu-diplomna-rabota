@@ -2378,6 +2378,7 @@ __webpack_require__.r(__webpack_exports__);
       var data = this.getSelectedControllersData();
       data.selectedControllerId = controllerId;
       this.$store.commit("setControllersData", data);
+      this.$emit("changedSelectedController", controllerId);
       this.selectedControllerId = controllerId;
     },
     setup: function setup() {
@@ -2393,6 +2394,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (controllersData.selectedControllerId) {
         this.selectedControllerId = controllersData.selectedControllerId;
+        this.$emit("changedSelectedController", controllersData.selectedControllerId);
       }
     }
   },
@@ -2527,10 +2529,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     DeviceListItem: _DeviceListItemComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  props: {
+    controllerId: Number
+  },
+  watch: {
+    controllerId: function controllerId(newVal, oldVal) {
+      this.retrieveDevices(newVal);
+    }
   },
   data: function data() {
     return {
@@ -2538,17 +2556,27 @@ __webpack_require__.r(__webpack_exports__);
       loading: false
     };
   },
-  methods: {},
-  created: function created() {
-    var _this = this;
+  methods: {
+    retrieveDevices: function retrieveDevices(controllerId) {
+      var _this = this;
 
-    this.loading = true;
-    var url = "/controller/" + 36 + "/devices";
-    var devicesRequest = axios.get(url);
-    devicesRequest.then(function (response) {
-      _this.devices = response.data;
-      _this.loading = false;
-    });
+      this.loading = true;
+
+      if (!controllerId) {
+        this.loading = false;
+        return;
+      }
+
+      var url = "/controller/" + this.controllerId + "/devices";
+      var devicesRequest = axios.get(url);
+      devicesRequest.then(function (response) {
+        _this.devices = response.data;
+        _this.loading = false;
+      });
+    }
+  },
+  created: function created() {
+    this.retrieveDevices(this.controllerId);
   },
   mounted: function mounted() {}
 });
@@ -2675,6 +2703,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2682,8 +2713,20 @@ __webpack_require__.r(__webpack_exports__);
     ControllerList: _Controller_ControllerListComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
     DeviceList: _Device_DeviceListComponent__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
+  data: function data() {
+    return {
+      selectedControllerId: null
+    };
+  },
   mounted: function mounted() {
     console.log("Component mounted.");
+  },
+  methods: {
+    onSelectedControllerChange: function onSelectedControllerChange(controllerId) {
+      console.log("selectedControllerChanged");
+      this.selectedControllerId = controllerId;
+      console.log(this.selectedControllerId);
+    }
   },
   created: function created() {}
 });
@@ -39836,29 +39879,43 @@ var render = function() {
   return _vm.loading
     ? _c("div", [_vm._v("\n    Loding...\n")])
     : _c("div", [
-        _c(
-          "ul",
-          { staticClass: "list-group list-group-flush" },
-          _vm._l(_vm.devices, function(device) {
-            return _c(
-              "li",
-              { key: device.id, staticClass: "list-group-item custom-item" },
-              [
-                _c("device-list-item", {
-                  attrs: {
-                    "device-id": device.id,
-                    "device-name": device.name,
-                    "device-status": device.status,
-                    "device-last-updated-prop": device.last_updated,
-                    "controller-name": device.controller_name
-                  }
-                })
-              ],
-              1
-            )
-          }),
-          0
-        )
+        _c("ul", { staticClass: "list-group list-group-flush" }, [
+          !_vm.controllerId
+            ? _c(
+                "li",
+                { staticClass: "list-group-item custom-item text-center" },
+                [_c("h3", [_vm._v("Please select controller.")])]
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.controllerId
+            ? _c(
+                "div",
+                _vm._l(_vm.devices, function(device) {
+                  return _c(
+                    "li",
+                    {
+                      key: device.id,
+                      staticClass: "list-group-item custom-item"
+                    },
+                    [
+                      _c("device-list-item", {
+                        attrs: {
+                          "device-id": device.id,
+                          "device-name": device.name,
+                          "device-status": device.status,
+                          "device-last-updated-prop": device.last_updated,
+                          "controller-name": device.controller_name
+                        }
+                      })
+                    ],
+                    1
+                  )
+                }),
+                0
+              )
+            : _vm._e()
+        ])
       ])
 }
 var staticRenderFns = []
@@ -39984,11 +40041,16 @@ var render = function() {
     [
       _c("h2", [_vm._v("Controllers")]),
       _vm._v(" "),
-      _c("controller-list", { attrs: { itemsPerPage: 3 } }),
+      _c("controller-list", {
+        attrs: { itemsPerPage: 3 },
+        on: { changedSelectedController: _vm.onSelectedControllerChange }
+      }),
       _vm._v(" "),
       _c("h2", { staticClass: "mt-5" }, [_vm._v("Devices")]),
       _vm._v(" "),
-      _c("device-list")
+      _c("device-list", {
+        attrs: { "controller-id": this.selectedControllerId }
+      })
     ],
     1
   )

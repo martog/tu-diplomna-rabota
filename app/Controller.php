@@ -68,7 +68,8 @@ class Controller extends Model
                     ) as devices")
             )
             ->from("controllerDevices")
-            ->groupBy("id", "name", "status", "last_communication");
+            ->groupBy("id", "name", "status", "last_communication")
+            ->orderBy("name");
 
         return $query->get();
     }

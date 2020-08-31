@@ -121,6 +121,7 @@ export default {
             data.selectedControllerId = controllerId;
 
             this.$store.commit("setControllersData", data);
+            this.$emit("changedSelectedController", controllerId);
             this.selectedControllerId = controllerId;
         },
         setup() {
@@ -136,6 +137,10 @@ export default {
             if (controllersData.selectedControllerId) {
                 this.selectedControllerId =
                     controllersData.selectedControllerId;
+                this.$emit(
+                    "changedSelectedController",
+                    controllersData.selectedControllerId
+                );
             }
         }
     },
