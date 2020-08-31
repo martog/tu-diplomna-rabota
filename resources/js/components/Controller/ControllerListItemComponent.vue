@@ -33,10 +33,6 @@
             </div>
         </div>
     </div>
-    <!-- <div>
-        {{ this.name }} {{ this.status }} Devices active: {{ this.devices.On }}/
-        {{ this.devices.On + this.devices.Off }}, {{ this.lastCommunication }}
-    </div> -->
 </template>
 
 <script>

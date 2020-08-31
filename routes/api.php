@@ -9,8 +9,8 @@ Route::group([
 
     /* AuthController */
     Route::post('auth/login', 'AuthController@login')->withoutMiddleware('auth:api');
+    Route::post('auth/refresh', 'AuthController@refresh')->withoutMiddleware('auth:api');
     Route::post('auth/logout', 'AuthController@logout');
-    Route::post('auth/refresh', 'AuthController@refresh');
 
 
     /* UsersController */

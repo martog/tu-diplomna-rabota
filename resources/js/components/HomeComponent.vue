@@ -1,6 +1,6 @@
 <template>
     <div>
-        <controller-list></controller-list>
+        <controller-list :itemsPerPage="4"></controller-list>
     </div>
 </template>
 

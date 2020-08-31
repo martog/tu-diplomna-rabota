@@ -1,15 +1,15 @@
 <template>
     <div>
         <h1>My Controllers</h1>
-        <div class="row mb-5">
-            <div v-if="this.loading">
+        <div class="row mb-2">
+            <div class="col" v-if="this.loading">
                 <p>Loading</p>
             </div>
             <div
                 v-else
-                v-for="(controller, index) in this.controllers"
+                v-for="(controller, index) in this.getControllers()"
                 :key="index"
-                class="col"
+                class="col-3"
             >
                 <controller-list-item
                     :name="controller.name"
@@ -19,26 +19,32 @@
                 ></controller-list-item>
             </div>
         </div>
-        <div class="row">
+        <div v-if="!this.loading" class="row justify-content-end">
             <div class="col text-right">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
+                        <li
+                            class="page-item"
+                            :disabled="this.currentPage === 1"
+                        >
+                            <a class="page-link" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Previous</span>
                             </a>
                         </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">1</a>
+                        <li
+                            class="page-item"
+                            v-for="page in this.totalPages"
+                            :key="page"
+                        >
+                            <a class="page-link" @click="currentPage = page">{{
+                                page
+                            }}</a>
                         </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                        </li>
-                        <li class="page-item">
+                        <li
+                            class="page-item"
+                            :disabled="this.currentPage === this.totalPages"
+                        >
                             <a class="page-link" href="#" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Next</span>
@@ -57,11 +63,31 @@ export default {
     components: {
         ControllerListItem
     },
+    props: {
+        itemsPerPage: Number
+    },
     data() {
         return {
             controllers: null,
-            loading: false
+            loading: false,
+            currentPage: 1,
+            totalPages: 1
         };
+    },
+    methods: {
+        getControllers() {
+            const start = (this.currentPage - 1) * this.itemsPerPage;
+            const stop = start + this.itemsPerPage;
+            console.log(
+                "start " +
+                    start +
+                    " stop " +
+                    stop +
+                    " total pages " +
+                    this.totalPages
+            );
+            return this.controllers.slice(start, stop);
+        }
     },
     created() {
         const controllersRequest = axios.get("/controllers");
@@ -70,6 +96,13 @@ export default {
         controllersRequest
             .then(response => {
                 this.controllers = response.data;
+
+                if (this.controllers.length) {
+                    this.totalPages = Math.ceil(
+                        this.controllers.length / this.itemsPerPage
+                    );
+                }
+
                 console.log(this.controllers);
                 this.loading = false;
             })
@@ -82,4 +115,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.page-link:hover {
+    cursor: pointer;
+}
+</style>
