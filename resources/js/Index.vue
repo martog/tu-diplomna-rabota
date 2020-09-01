@@ -1,12 +1,11 @@
 <template>
     <div>
-        <nav
-            :hidden="!loggedIn || !currentUser"
-            class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark"
-        >
-            <a class="navbar-brand">SmartHome</a>
+        <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+            <a class="navbar-brand" :class="!loggedIn ? ['mr-auto'] : []"
+                >SmartHome</a
+            >
 
-            <div class="collapse navbar-collapse">
+            <div v-if="loggedIn" class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
                         <a class="nav-link" href="/home"
@@ -41,9 +40,35 @@
                     </li>
                 </ul>
             </div>
+            <div v-else>
+                <ul class="navbar-nav">
+                    <li
+                        class="ml-auto nav-item"
+                        :class="{ active: currentRouteName === 'login' }"
+                    >
+                        <a class="nav-link" href="/login" role="button">
+                            Log in
+                        </a>
+                    </li>
+                    <li
+                        class="ml-auto nav-item"
+                        :class="{ active: currentRouteName === 'register' }"
+                    >
+                        <a class="nav-link" href="/register" role="button">
+                            Register
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </nav>
 
-        <div class="container mt-6 mb-4 pr-10 pl-10">
+        <div
+            :class="
+                loggedIn
+                    ? ['container', 'mt-6', 'mb-4', 'pr-10', 'pl-10']
+                    : ['container-fluid', 'pr-10', 'pl-10']
+            "
+        >
             <router-view></router-view>
         </div>
     </div>
@@ -60,6 +85,9 @@ export default {
             if (userData) {
                 return userData.first_name + " " + userData.last_name;
             }
+        },
+        currentRouteName() {
+            return this.$route.name;
         }
     }
 };
