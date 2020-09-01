@@ -105,7 +105,7 @@ export default {
                             this.$emit("controllerUpdated", null);
                             return;
                         }
-                        console.log("edit ", event.params);
+
                         this.$emit("controllerUpdated", event.params);
                     }
                 }
@@ -116,7 +116,16 @@ export default {
             this.$modal.show(
                 DeleteDialog,
                 { controllerName: this.name, controllerId: this.id },
-                { draggable: false, height: "auto", width: "600px" }
+                { draggable: false, height: "auto", width: "600px" },
+                {
+                    "before-close": event => {
+                        console.log(event);
+                        if (event.params === undefined) {
+                            return;
+                        }
+                        this.$emit("controllerUpdated", event.params);
+                    }
+                }
             );
         }
     }

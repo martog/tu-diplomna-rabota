@@ -123,6 +123,8 @@ export default {
     },
     methods: {
         onControllerUpdated(data) {
+            console.log("controllerUpdated ");
+            console.log(data);
             if (!data) {
                 return;
             }
@@ -134,6 +136,11 @@ export default {
                     }
                     return controller;
                 });
+                return;
+            }
+
+            if (data.controllerDeleted) {
+                this.retrieveControllers(false, null);
             }
         },
         retrieveControllers(loading = false, selectedControllerId = null) {

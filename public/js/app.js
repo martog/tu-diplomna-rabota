@@ -2638,6 +2638,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     onControllerUpdated: function onControllerUpdated(data) {
+      console.log("controllerUpdated ");
+      console.log(data);
+
       if (!data) {
         return;
       }
@@ -2650,6 +2653,11 @@ __webpack_require__.r(__webpack_exports__);
 
           return controller;
         });
+        return;
+      }
+
+      if (data.controllerDeleted) {
+        this.retrieveControllers(false, null);
       }
     },
     retrieveControllers: function retrieveControllers() {
@@ -2855,13 +2863,13 @@ __webpack_require__.r(__webpack_exports__);
             return;
           }
 
-          console.log("edit ", event.params);
-
           _this.$emit("controllerUpdated", event.params);
         }
       });
     },
     showDeleteDialog: function showDeleteDialog() {
+      var _this2 = this;
+
       console.log("here");
       this.$modal.show(_DeleteControllerDialog__WEBPACK_IMPORTED_MODULE_1__["default"], {
         controllerName: this.name,
@@ -2870,6 +2878,16 @@ __webpack_require__.r(__webpack_exports__);
         draggable: false,
         height: "auto",
         width: "600px"
+      }, {
+        "before-close": function beforeClose(event) {
+          console.log(event);
+
+          if (event.params === undefined) {
+            return;
+          }
+
+          _this2.$emit("controllerUpdated", event.params);
+        }
       });
     }
   }
@@ -2956,7 +2974,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     closeModal: function closeModal() {
-      this.$emit("close");
+      var deleted = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+      this.$emit("close", {
+        controllerDeleted: deleted
+      });
     },
     deleteController: function deleteController() {
       var _this = this;
@@ -2967,7 +2988,7 @@ __webpack_require__.r(__webpack_exports__);
       deleteControllerRequest.then(function (response) {
         _this.loading = false;
 
-        _this.closeModal();
+        _this.closeModal(true);
       })["catch"](function (error) {
         console.log(error);
         _this.loading = false;
@@ -41130,7 +41151,7 @@ var render = function() {
             attrs: { type: "button", "data-dismiss": "modal" },
             on: {
               click: function($event) {
-                return _vm.closeModal()
+                return _vm.closeModal(false)
               }
             }
           },

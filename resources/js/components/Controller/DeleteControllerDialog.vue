@@ -45,7 +45,7 @@
                     type="button"
                     class="btn btn-secondary"
                     data-dismiss="modal"
-                    @click="closeModal()"
+                    @click="closeModal(false)"
                 >
                     Cancel
                 </button>
@@ -68,8 +68,8 @@ export default {
         };
     },
     methods: {
-        closeModal() {
-            this.$emit("close");
+        closeModal(deleted = false) {
+            this.$emit("close", { controllerDeleted: deleted });
         },
         deleteController() {
             this.loading = true;
@@ -80,8 +80,7 @@ export default {
             deleteControllerRequest
                 .then(response => {
                     this.loading = false;
-
-                    this.closeModal();
+                    this.closeModal(true);
                 })
                 .catch(error => {
                     console.log(error);
