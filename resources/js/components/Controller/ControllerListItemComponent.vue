@@ -100,10 +100,13 @@ export default {
                 { draggable: false, height: "auto", width: "400px" },
                 {
                     "before-close": event => {
-                        if (!event.params) {
+                        console.log(event);
+                        if (event.params === undefined) {
+                            this.$emit("controllerUpdated", null);
                             return;
                         }
-                        this.$emit("controllerUpdated", { updated: true });
+                        console.log("edit ", event.params);
+                        this.$emit("controllerUpdated", event.params);
                     }
                 }
             );

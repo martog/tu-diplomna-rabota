@@ -103,8 +103,8 @@ export default {
         this.controllerName = this.controllerNameProp;
     },
     methods: {
-        closeModal(controllerId = null) {
-            this.$emit("close", controllerId);
+        closeModal(data = null) {
+            this.$emit("close", data);
         },
         addController() {
             this.loading = true;
@@ -143,7 +143,10 @@ export default {
             addControllerRequest
                 .then(response => {
                     this.loading = false;
-                    this.closeModal(this.controllerId);
+                    this.closeModal({
+                        controllerId: this.controllerId,
+                        controllerName: this.controllerName
+                    });
                 })
                 .catch(error => {
                     console.log(error);

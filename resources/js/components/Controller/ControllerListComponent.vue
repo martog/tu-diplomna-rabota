@@ -21,7 +21,7 @@
                     :status="controller.status"
                     :lastCommunication="controller.last_communication"
                     :devices="controller.devices"
-                    @controllerUpdated="retrieveControllers()"
+                    @controllerUpdated="onControllerUpdated($event)"
                 ></controller-list-item>
             </div>
         </div>
@@ -122,6 +122,20 @@ export default {
         };
     },
     methods: {
+        onControllerUpdated(data) {
+            if (!data) {
+                return;
+            }
+
+            if (data.controllerId && data.controllerName) {
+                this.controllers = this.controllers.map(controller => {
+                    if (controller.id === data.controllerId) {
+                        controller.name = data.controllerName;
+                    }
+                    return controller;
+                });
+            }
+        },
         retrieveControllers(loading = false, selectedControllerId = null) {
             const controllersRequest = axios.get("/controllers");
 
