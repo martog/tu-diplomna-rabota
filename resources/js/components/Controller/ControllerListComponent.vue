@@ -76,7 +76,7 @@
                 </nav>
             </div>
         </div>
-        <div class="row" v-if="!this.controllers.length">
+        <div class="row" v-if="this.showNoControllersMsg">
             <div class="col">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item custom-item text-center">
@@ -109,7 +109,8 @@ export default {
             loading: true,
             currentPage: 1,
             totalPages: 1,
-            selectedControllerId: null
+            selectedControllerId: null,
+            showNoControllersMsg: false
         };
     },
     methods: {
@@ -124,6 +125,9 @@ export default {
                         this.totalPages = Math.ceil(
                             this.controllers.length / this.itemsPerPage
                         );
+                        this.showNoControllersMsg = false;
+                    } else {
+                        this.showNoControllersMsg = true;
                     }
 
                     console.log(this.controllers);

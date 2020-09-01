@@ -2594,7 +2594,8 @@ __webpack_require__.r(__webpack_exports__);
       loading: true,
       currentPage: 1,
       totalPages: 1,
-      selectedControllerId: null
+      selectedControllerId: null,
+      showNoControllersMsg: false
     };
   },
   methods: {
@@ -2607,6 +2608,9 @@ __webpack_require__.r(__webpack_exports__);
 
         if (_this.controllers.length) {
           _this.totalPages = Math.ceil(_this.controllers.length / _this.itemsPerPage);
+          _this.showNoControllersMsg = false;
+        } else {
+          _this.showNoControllersMsg = true;
         }
 
         console.log(_this.controllers);
@@ -40570,7 +40574,7 @@ var render = function() {
         ])
       : _vm._e(),
     _vm._v(" "),
-    !this.controllers.length
+    this.showNoControllersMsg
       ? _c("div", { staticClass: "row" }, [_vm._m(1)])
       : _vm._e()
   ])
