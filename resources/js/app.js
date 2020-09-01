@@ -6,11 +6,13 @@ import Index from "./Index";
 import Vue from "vue";
 import Vuex from "vuex";
 import storeDefinition from "./store/store";
+import VModal from "vue-js-modal";
 
 window.Vue = require("vue");
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
+Vue.use(VModal);
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
