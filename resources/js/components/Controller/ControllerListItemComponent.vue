@@ -8,8 +8,16 @@
                         <span
                             @click="showEditModal()"
                             class="material-icons custom-icon"
+                            v-tooltip:bottom="'Edit'"
                         >
                             edit
+                        </span>
+                        <span
+                            @click="showDeleteDialog()"
+                            class="material-icons custom-icon"
+                            v-tooltip:bottom="'Delete'"
+                        >
+                            delete
                         </span>
                     </h5>
                 </div>
@@ -54,6 +62,15 @@ export default {
         devices: Object,
         selected: Boolean
     },
+    directives: {
+        tooltip: function(el, binding) {
+            $(el).tooltip({
+                title: binding.value,
+                placement: binding.arg,
+                trigger: "hover"
+            });
+        }
+    },
     computed: {
         getBadgeClass() {
             if (this.status === "Online") {
@@ -85,7 +102,8 @@ export default {
                     }
                 }
             );
-        }
+        },
+        showDeleteDialog() {}
     }
 };
 </script>

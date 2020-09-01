@@ -2751,6 +2751,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2760,6 +2768,15 @@ __webpack_require__.r(__webpack_exports__);
     lastCommunication: String,
     devices: Object,
     selected: Boolean
+  },
+  directives: {
+    tooltip: function tooltip(el, binding) {
+      $(el).tooltip({
+        title: binding.value,
+        placement: binding.arg,
+        trigger: "hover"
+      });
+    }
   },
   computed: {
     getBadgeClass: function getBadgeClass() {
@@ -2796,7 +2813,8 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
       });
-    }
+    },
+    showDeleteDialog: function showDeleteDialog() {}
   }
 });
 
@@ -40765,6 +40783,15 @@ var render = function() {
             _c(
               "span",
               {
+                directives: [
+                  {
+                    name: "tooltip",
+                    rawName: "v-tooltip:bottom",
+                    value: "Edit",
+                    expression: "'Edit'",
+                    arg: "bottom"
+                  }
+                ],
                 staticClass: "material-icons custom-icon",
                 on: {
                   click: function($event) {
@@ -40773,6 +40800,28 @@ var render = function() {
                 }
               },
               [_vm._v("\n                        edit\n                    ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "span",
+              {
+                directives: [
+                  {
+                    name: "tooltip",
+                    rawName: "v-tooltip:bottom",
+                    value: "Delete",
+                    expression: "'Delete'",
+                    arg: "bottom"
+                  }
+                ],
+                staticClass: "material-icons custom-icon",
+                on: {
+                  click: function($event) {
+                    return _vm.showDeleteDialog()
+                  }
+                }
+              },
+              [_vm._v("\n                        delete\n                    ")]
             )
           ])
         ]),
@@ -58156,14 +58205,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!****************************************************************************!*\
   !*** ./resources/js/components/Controller/ControllerListItemComponent.vue ***!
   \****************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ControllerListItemComponent_vue_vue_type_template_id_b35062f0_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ControllerListItemComponent.vue?vue&type=template&id=b35062f0&scoped=true& */ "./resources/js/components/Controller/ControllerListItemComponent.vue?vue&type=template&id=b35062f0&scoped=true&");
 /* harmony import */ var _ControllerListItemComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ControllerListItemComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/Controller/ControllerListItemComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _ControllerListItemComponent_vue_vue_type_style_index_0_id_b35062f0_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ControllerListItemComponent.vue?vue&type=style&index=0&id=b35062f0&lang=scss&scoped=true& */ "./resources/js/components/Controller/ControllerListItemComponent.vue?vue&type=style&index=0&id=b35062f0&lang=scss&scoped=true&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _ControllerListItemComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _ControllerListItemComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _ControllerListItemComponent_vue_vue_type_style_index_0_id_b35062f0_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ControllerListItemComponent.vue?vue&type=style&index=0&id=b35062f0&lang=scss&scoped=true& */ "./resources/js/components/Controller/ControllerListItemComponent.vue?vue&type=style&index=0&id=b35062f0&lang=scss&scoped=true&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -58195,7 +58245,7 @@ component.options.__file = "resources/js/components/Controller/ControllerListIte
 /*!*****************************************************************************************************!*\
   !*** ./resources/js/components/Controller/ControllerListItemComponent.vue?vue&type=script&lang=js& ***!
   \*****************************************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
