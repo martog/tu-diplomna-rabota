@@ -61,7 +61,7 @@
                     :disabled="this.loading"
                     @click="save()"
                 >
-                    Save changes
+                    {{ type === "add" ? "Add" : "Save" }}
                     <div
                         v-if="this.loading"
                         class="ml-1 spinner-border spinner-border-sm"
@@ -86,7 +86,9 @@
 <script>
 export default {
     props: {
-        type: String
+        type: String,
+        controllerId: Number,
+        controllerNameProp: String
     },
     data() {
         return {
@@ -96,6 +98,9 @@ export default {
             showError: false,
             loading: false
         };
+    },
+    created() {
+        this.controllerName = this.controllerNameProp;
     },
     methods: {
         closeModal() {
@@ -127,7 +132,27 @@ export default {
                     this.showError = true;
                 });
         },
-        editController() {},
+        editController() {
+            this.loading = true;
+
+            const url = `controller/${this.controllerId}/update`;
+            const addControllerRequest = axios.put(url, {
+                controller_name: this.controllerName
+            });
+
+            addControllerRequest
+                .then(response => {
+                    this.loading = false;
+                    this.closeModal();
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.loading = false;
+                    this.errorMsg =
+                        "Error adding controller. Please contact administrator.";
+                    this.showError = true;
+                });
+        },
         save() {
             this.showError = false;
             if (
@@ -141,7 +166,7 @@ export default {
             }
 
             if (
-                this.type != "add" &&
+                this.type === "add" &&
                 (!this.controllerSerial.length ||
                     (this.controllerSerial.length &&
                         this.controllerSerial.length !== 16))

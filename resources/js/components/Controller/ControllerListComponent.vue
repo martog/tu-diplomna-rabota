@@ -16,10 +16,12 @@
                 <controller-list-item
                     class="custom-controller"
                     :selected="selectedControllerId === controller.id"
+                    :id="controller.id"
                     :name="controller.name"
                     :status="controller.status"
                     :lastCommunication="controller.last_communication"
                     :devices="controller.devices"
+                    @controllerUpdated="retrieveControllers()"
                 ></controller-list-item>
             </div>
         </div>
@@ -206,8 +208,6 @@ export default {
     cursor: pointer;
 }
 .page-item .page-link {
-    //background-color: #343a40;
-
     color: #212529;
 }
 .page-item.active .page-link {

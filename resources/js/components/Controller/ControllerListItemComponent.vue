@@ -3,7 +3,15 @@
         <div class="card-body">
             <div class="row card-title mb-0">
                 <div class="col">
-                    <h5>{{ this.name }}</h5>
+                    <h5>
+                        {{ this.name }}
+                        <span
+                            @click="showEditModal()"
+                            class="material-icons custom-icon"
+                        >
+                            edit
+                        </span>
+                    </h5>
                 </div>
                 <div class="col text-right">
                     <span class="align-text-top badge" :class="getBadgeClass">{{
@@ -36,8 +44,10 @@
 </template>
 
 <script>
+import AddEditModal from "./AddEditControllerModal";
 export default {
     props: {
+        id: Number,
         name: String,
         status: String,
         lastCommunication: String,
@@ -56,11 +66,37 @@ export default {
             if (this.selected) {
                 return ["border-primary"];
             }
-
-            // return ["border-dark"];
+            return [];
+        }
+    },
+    methods: {
+        showEditModal() {
+            this.$modal.show(
+                AddEditModal,
+                {
+                    type: "edit",
+                    controllerId: this.id,
+                    controllerNameProp: this.name
+                },
+                { draggable: false, height: "auto", width: "400px" },
+                {
+                    "before-close": event => {
+                        this.$emit("controllerUpdated", { updated: true });
+                    }
+                }
+            );
         }
     }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.custom-icon {
+    font-size: 18px;
+    color: #cab7b7;
+}
+.custom-icon:hover {
+    cursor: pointer !important;
+    color: #343a40;
+}
+</style>
