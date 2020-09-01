@@ -23,7 +23,10 @@
                 ></controller-list-item>
             </div>
         </div>
-        <div v-if="!this.loading" class="row justify-content-end">
+        <div
+            v-if="!this.loading && this.controllers.length"
+            class="row justify-content-end"
+        >
             <div class="col text-right">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination">
@@ -73,6 +76,15 @@
                 </nav>
             </div>
         </div>
+        <div class="row" v-if="!this.controllers.length">
+            <div class="col">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item custom-item text-center">
+                        <h3>You don't have any controllers.</h3>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -84,13 +96,10 @@ export default {
     },
     props: {
         itemsPerPage: Number,
-        deviceStatusChange: {
-            deviceId: Number,
-            status: Boolean
-        }
+        reloadControllers: Object
     },
     watch: {
-        deviceStatusChange: function(newVal, oldVal) {
+        reloadControllers: function(newVal, oldVal) {
             this.retrieveControllers();
         }
     },
@@ -201,5 +210,9 @@ export default {
     color: #fff;
     background-color: #53a5db;
     border-color: #53a5db;
+}
+.custom-item {
+    background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgb(255 255 255);
 }
 </style>

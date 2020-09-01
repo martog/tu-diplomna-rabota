@@ -45,11 +45,11 @@ class UserController extends Controller
 
         $checkUser = User::exists($email, $username)->first();
 
-        if ($checkUser != null && $checkUser->usernname == $username) {
+        if ($checkUser != null && ($checkUser->username == $username)) {
             return new JsonResponse("This username is already taken!", 409);
         }
 
-        if ($checkUser != null && $checkUser->email == $email) {
+        if ($checkUser != null && ($checkUser->email == $email)) {
             return new JsonResponse("This email is already taken!", 409);
         }
 

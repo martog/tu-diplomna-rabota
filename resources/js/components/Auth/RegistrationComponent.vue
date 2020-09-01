@@ -156,9 +156,12 @@ export default {
                     this.$router.push({ name: "login" });
                 })
                 .catch(error => {
-                    this.showError = true;
                     this.errorMsg =
                         "Server error. Please contact administrator.";
+                    if (error.response.status === 409) {
+                        this.errorMsg = error.response.data;
+                    }
+                    this.showError = true;
                 });
         }
     }
