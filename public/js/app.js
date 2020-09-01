@@ -2434,7 +2434,9 @@ __webpack_require__.r(__webpack_exports__);
         controller_name: this.controllerName
       });
       addControllerRequest.then(function (response) {
-        _this.loading = false; // emit to reload controllers
+        _this.loading = false;
+
+        _this.closeModal();
       })["catch"](function (error) {
         console.log(error);
         _this.loading = false;
@@ -3019,12 +3021,21 @@ __webpack_require__.r(__webpack_exports__);
       this.reloadControllers = deviceStatus;
     },
     showAddControllerModal: function showAddControllerModal() {
+      var _this = this;
+
       this.$modal.show(_Controller_AddEditControllerModal__WEBPACK_IMPORTED_MODULE_2__["default"], {
         type: "add"
       }, {
         draggable: false,
         height: "auto",
         width: "400px"
+      }, {
+        "before-close": function beforeClose(event) {
+          console.log("onaddedcontr");
+          _this.reloadControllers = {
+            data: null
+          };
+        }
       });
     }
   },

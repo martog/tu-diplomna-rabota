@@ -113,7 +113,7 @@ export default {
             addControllerRequest
                 .then(response => {
                     this.loading = false;
-                    // emit to reload controllers
+                    this.closeModal();
                 })
                 .catch(error => {
                     console.log(error);

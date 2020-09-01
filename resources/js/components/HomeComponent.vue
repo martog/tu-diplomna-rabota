@@ -57,7 +57,13 @@ export default {
             this.$modal.show(
                 AddEditModal,
                 { type: "add" },
-                { draggable: false, height: "auto", width: "400px" }
+                { draggable: false, height: "auto", width: "400px" },
+                {
+                    "before-close": event => {
+                        console.log("onaddedcontr");
+                        this.reloadControllers = { data: null };
+                    }
+                }
             );
         }
     },
