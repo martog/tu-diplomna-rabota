@@ -93,12 +93,7 @@ export default {
                     });
                 })
                 .catch(error => {
-                    console.log(error);
                     this.deviceActive = !this.deviceActive;
-                    this.$emit("changedDeviceStatus", {
-                        deviceId: deviceId,
-                        status: this.deviceActive
-                    });
                     this.deviceStatusLoading = false;
                 });
         }

@@ -103,8 +103,8 @@ export default {
         this.controllerName = this.controllerNameProp;
     },
     methods: {
-        closeModal() {
-            this.$emit("close");
+        closeModal(controllerId = null) {
+            this.$emit("close", controllerId);
         },
         addController() {
             this.loading = true;
@@ -118,7 +118,7 @@ export default {
             addControllerRequest
                 .then(response => {
                     this.loading = false;
-                    this.closeModal();
+                    this.closeModal(response.data.id);
                 })
                 .catch(error => {
                     console.log(error);
@@ -143,13 +143,13 @@ export default {
             addControllerRequest
                 .then(response => {
                     this.loading = false;
-                    this.closeModal();
+                    this.closeModal(this.controllerId);
                 })
                 .catch(error => {
                     console.log(error);
                     this.loading = false;
                     this.errorMsg =
-                        "Error adding controller. Please contact administrator.";
+                        "Error editing controller. Please contact administrator.";
                     this.showError = true;
                 });
         },

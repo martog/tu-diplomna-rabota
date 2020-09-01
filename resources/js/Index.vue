@@ -69,6 +69,7 @@
                     : ['container-fluid', 'pr-10', 'pl-10']
             "
         >
+            <v-dialog />
             <router-view></router-view>
         </div>
     </div>

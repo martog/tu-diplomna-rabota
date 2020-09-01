@@ -12,7 +12,7 @@ window.Vue = require("vue");
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
-Vue.use(VModal);
+Vue.use(VModal, { dialog: true });
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {

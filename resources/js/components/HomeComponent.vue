@@ -60,8 +60,14 @@ export default {
                 { draggable: false, height: "auto", width: "400px" },
                 {
                     "before-close": event => {
-                        console.log("onaddedcontr");
-                        this.reloadControllers = { data: null };
+                        if (!event.params) {
+                            return;
+                        }
+
+                        this.reloadControllers = {
+                            loading: true,
+                            controllerId: event.params
+                        };
                     }
                 }
             );

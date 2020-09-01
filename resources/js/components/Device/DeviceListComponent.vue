@@ -45,7 +45,9 @@ export default {
     },
     watch: {
         controllerId: function(newVal, oldVal) {
-            this.retrieveDevices(newVal);
+            if (newVal) {
+                this.retrieveDevices(newVal);
+            }
         }
     },
     data() {

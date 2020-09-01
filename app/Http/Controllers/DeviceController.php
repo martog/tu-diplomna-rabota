@@ -18,7 +18,7 @@ use PHPUnit\Util\Json;
 class DeviceController extends Controller
 {
 
-    private DeviceClient $deviceClient;
+    private $deviceClient;
 
     public function __construct()
     {
@@ -135,7 +135,6 @@ class DeviceController extends Controller
             throw new \Exception($validator->errors()->first());
         }
 
-        $controllerId = $request->get("controller_id");
         $controllerName = $request->get("controller_name");
 
         $controller = Controller::filter($controllerId, null, Auth::user()->id)->first();

@@ -53,6 +53,8 @@
 
 <script>
 import AddEditModal from "./AddEditControllerModal";
+import DeleteDialog from "./DeleteControllerDialog";
+
 export default {
     props: {
         id: Number,
@@ -98,12 +100,22 @@ export default {
                 { draggable: false, height: "auto", width: "400px" },
                 {
                     "before-close": event => {
+                        if (!event.params) {
+                            return;
+                        }
                         this.$emit("controllerUpdated", { updated: true });
                     }
                 }
             );
         },
-        showDeleteDialog() {}
+        showDeleteDialog() {
+            console.log("here");
+            this.$modal.show(
+                DeleteDialog,
+                { controllerName: this.name, controllerId: this.id },
+                { draggable: false, height: "auto", width: "600px" }
+            );
+        }
     }
 };
 </script>

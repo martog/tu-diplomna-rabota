@@ -10,7 +10,7 @@
                 v-else
                 v-for="(controller, index) in this.getControllers()"
                 :key="index"
-                @click="setSelectedController(controller.id)"
+                @click="storeSelectedController(controller.id)"
                 class="col-4"
             >
                 <controller-list-item
@@ -40,7 +40,7 @@
                         >
                             <a
                                 class="page-link"
-                                @click="setCurrentPage(currentPage - 1)"
+                                @click="storeCurrentPage(currentPage - 1)"
                                 aria-label="Previous"
                             >
                                 <span aria-hidden="true">&laquo;</span>
@@ -55,7 +55,7 @@
                         >
                             <a
                                 class="page-link"
-                                @click="setCurrentPage(page)"
+                                @click="storeCurrentPage(page)"
                                 >{{ page }}</a
                             >
                         </li>
@@ -67,7 +67,7 @@
                         >
                             <a
                                 class="page-link"
-                                @click="setCurrentPage(currentPage + 1)"
+                                @click="storeCurrentPage(currentPage + 1)"
                                 aria-label="Next"
                             >
                                 <span aria-hidden="true">&raquo;</span>
@@ -102,7 +102,13 @@ export default {
     },
     watch: {
         reloadControllers: function(newVal, oldVal) {
-            this.retrieveControllers();
+            if (newVal) {
+                const loading = newVal.loading != null ? newVal.loading : false;
+                this.showNoControllersMsg = false;
+                this.retrieveControllers(loading, newVal.controllerId);
+            } else {
+                this.retrieveControllers();
+            }
         }
     },
     data() {
@@ -116,8 +122,10 @@ export default {
         };
     },
     methods: {
-        retrieveControllers() {
+        retrieveControllers(loading = false, selectedControllerId = null) {
             const controllersRequest = axios.get("/controllers");
+
+            this.loading = loading;
 
             controllersRequest
                 .then(response => {
@@ -127,8 +135,18 @@ export default {
                         this.totalPages = Math.ceil(
                             this.controllers.length / this.itemsPerPage
                         );
+
+                        if (selectedControllerId) {
+                            this.storeSelectedController(selectedControllerId);
+                        } else {
+                            this.storeSelectedController(
+                                this.controllers[0].id
+                            );
+                        }
+
                         this.showNoControllersMsg = false;
                     } else {
+                        this.storeSelectedController(null);
                         this.showNoControllersMsg = true;
                     }
 
@@ -157,17 +175,16 @@ export default {
         getSelectedControllersData() {
             return this.$store.getters.controllersData;
         },
-        setCurrentPage(page) {
+        storeCurrentPage(page) {
             let data = this.getSelectedControllersData();
             data.selectedPage = page;
 
             this.$store.commit("setControllersData", data);
             this.currentPage = page;
         },
-        setSelectedController(controllerId) {
+        storeSelectedController(controllerId) {
             let data = this.getSelectedControllersData();
             data.selectedControllerId = controllerId;
-
             this.$store.commit("setControllersData", data);
             this.$emit("changedSelectedController", controllerId);
             this.selectedControllerId = controllerId;
@@ -194,8 +211,7 @@ export default {
     },
     created() {
         this.setup();
-        this.loading = true;
-        this.retrieveControllers();
+        this.retrieveControllers(true);
     }
 };
 </script>
