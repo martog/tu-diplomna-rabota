@@ -61,7 +61,7 @@ export default {
                 {
                     "before-close": event => {
                         console.log("onaddedcontr");
-                        this.reloadControllers = { data: null };
+                        this.reloadControllers = { loading: true };
                     }
                 }
             );

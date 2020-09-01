@@ -102,7 +102,12 @@ export default {
     },
     watch: {
         reloadControllers: function(newVal, oldVal) {
-            this.retrieveControllers();
+            if (newVal && newVal.loading != null) {
+                this.showNoControllersMsg = false;
+                this.retrieveControllers(true);
+            } else {
+                this.retrieveControllers();
+            }
         }
     },
     data() {
@@ -116,8 +121,10 @@ export default {
         };
     },
     methods: {
-        retrieveControllers() {
+        retrieveControllers(loading = false) {
             const controllersRequest = axios.get("/controllers");
+
+            this.loading = loading;
 
             controllersRequest
                 .then(response => {
@@ -129,6 +136,7 @@ export default {
                         );
                         this.showNoControllersMsg = false;
                     } else {
+                        this.setSelectedController(null);
                         this.showNoControllersMsg = true;
                     }
 
@@ -167,7 +175,6 @@ export default {
         setSelectedController(controllerId) {
             let data = this.getSelectedControllersData();
             data.selectedControllerId = controllerId;
-
             this.$store.commit("setControllersData", data);
             this.$emit("changedSelectedController", controllerId);
             this.selectedControllerId = controllerId;
@@ -194,8 +201,7 @@ export default {
     },
     created() {
         this.setup();
-        this.loading = true;
-        this.retrieveControllers();
+        this.retrieveControllers(true);
     }
 };
 </script>
