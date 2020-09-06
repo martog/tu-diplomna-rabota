@@ -109,7 +109,7 @@ class DeviceController extends Controller
 
         $controller = Controller::filter($controllerId, null, $user->id)->first();
         if (!isset($controller)) {
-            return new JsonResponse("Cannot find controller");
+            return new JsonResponse("Cannot find controller", 404);
         }
 
         DB::beginTransaction();
