@@ -3139,6 +3139,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     deviceId: Number,
@@ -3152,11 +3185,15 @@ __webpack_require__.r(__webpack_exports__);
       deviceActive: this.isDeviceActive(),
       deviceLastUpdated: "",
       deviceStatusLoading: false,
-      deviceStatusNotChangedErrMsg: "Device status not changed. Check connection!"
+      deviceUpdateLoading: false,
+      deviceStatusNotChangedErrMsg: "Device status not changed. Check connection!",
+      editModeEnabled: false,
+      newDeviceName: null
     };
   },
   created: function created() {
     this.deviceLastUpdated = this.deviceLastUpdatedProp;
+    this.newDeviceName = this.deviceName;
   },
   methods: {
     isDeviceActive: function isDeviceActive() {
@@ -3189,6 +3226,30 @@ __webpack_require__.r(__webpack_exports__);
         _this.deviceActive = !_this.deviceActive;
         _this.deviceStatusLoading = false;
       });
+    },
+    save: function save(deviceId) {
+      var _this2 = this;
+
+      this.deviceUpdateLoading = true;
+      var url = "controller/devices/".concat(deviceId, "/update");
+      var updateDeviceNameRequest = axios.put(url, {
+        device_name: this.newDeviceName
+      });
+      updateDeviceNameRequest.then(function (response) {
+        _this2.deviceUpdateLoading = false;
+        _this2.editModeEnabled = false;
+      })["catch"](function (error) {
+        _this2.newDeviceName = _this2.deviceName;
+        _this2.deviceUpdateLoading = false;
+        _this2.editModeEnabled = false;
+      });
+    },
+    enableEditMode: function enableEditMode(value) {
+      this.editModeEnabled = value;
+    },
+    cancelEdit: function cancelEdit() {
+      this.newDeviceName = this.deviceName;
+      this.enableEditMode(false);
     }
   }
 });
@@ -7815,7 +7876,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "label[data-v-560ead48] {\n  position: relative;\n}", ""]);
+exports.push([module.i, "label[data-v-560ead48] {\n  position: relative;\n}\n.custom-icon[data-v-560ead48] {\n  font-size: 18px;\n  color: #cab7b7;\n}\n.custom-icon[data-v-560ead48]:hover {\n  cursor: pointer !important;\n  color: #343a40;\n}", ""]);
 
 // exports
 
@@ -41234,11 +41295,101 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-3" }, [
-        _c("h5", [_vm._v("Device:")]),
-        _vm._v(" "),
-        _c("p", [_vm._v(_vm._s(_vm.deviceName))])
-      ]),
+      !this.editModeEnabled
+        ? _c("div", { staticClass: "col-3" }, [
+            _c("h5", [_vm._v("Device:")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "\n                " +
+                  _vm._s(
+                    _vm.newDeviceName ? _vm.newDeviceName : _vm.deviceName
+                  ) +
+                  "\n                "
+              ),
+              _c(
+                "span",
+                {
+                  staticClass: "material-icons custom-icon",
+                  on: {
+                    click: function($event) {
+                      return _vm.enableEditMode(true)
+                    }
+                  }
+                },
+                [_vm._v("\n                    edit\n                ")]
+              )
+            ])
+          ])
+        : _c("div", { staticClass: "col-3" }, [
+            _c("h5", [_vm._v("Device:")]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.newDeviceName,
+                  expression: "newDeviceName"
+                }
+              ],
+              attrs: { type: "text" },
+              domProps: { value: _vm.newDeviceName },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.newDeviceName = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            !_vm.deviceUpdateLoading
+              ? _c(
+                  "span",
+                  {
+                    staticClass: "material-icons custom-icon",
+                    on: {
+                      click: function($event) {
+                        return _vm.save(_vm.deviceId)
+                      }
+                    }
+                  },
+                  [_vm._v("\n                check\n            ")]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            !_vm.deviceUpdateLoading
+              ? _c(
+                  "span",
+                  {
+                    staticClass: "material-icons custom-icon",
+                    on: {
+                      click: function($event) {
+                        return _vm.cancelEdit()
+                      }
+                    }
+                  },
+                  [_vm._v("\n                clear\n            ")]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.deviceUpdateLoading
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "ml-1 spinner-border spinner-border-sm",
+                    attrs: { role: "status" }
+                  },
+                  [
+                    _c("span", { staticClass: "sr-only" }, [
+                      _vm._v("Loading...")
+                    ])
+                  ]
+                )
+              : _vm._e()
+          ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-4" }, [
         _c("h5", [_vm._v("Controller:")]),
