@@ -2,10 +2,7 @@
     <div>
         <div class="row full-screen align-items-center justify-content-center">
             <div class="col-6 col-border-right text-center">
-                <img
-                    src="../../../img/smart-home-index.png"
-                    class="img-fluid"
-                />
+                <img src="../../../img/index.png" class="img-fluid" />
             </div>
             <div class="col-3 pl-5">
                 <div>

@@ -1976,15 +1976,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: {
     loggedIn: function loggedIn() {
@@ -2014,9 +2005,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
 //
 //
 //
@@ -39844,12 +39832,12 @@ var render = function() {
             staticClass: "navbar-brand",
             class: !_vm.loggedIn ? ["mr-auto"] : []
           },
-          [_vm._v("SmartHome")]
+          [_vm._v("SmartController")]
         ),
         _vm._v(" "),
         _vm.loggedIn
           ? _c("div", { staticClass: "collapse navbar-collapse" }, [
-              _vm._m(0),
+              _c("ul", { staticClass: "navbar-nav mr-auto" }),
               _vm._v(" "),
               _c("ul", { staticClass: "navbar-nav" }, [
                 _c("li", { staticClass: "nav-item dropdown" }, [
@@ -39875,7 +39863,7 @@ var render = function() {
                     ]
                   ),
                   _vm._v(" "),
-                  _vm._m(1)
+                  _vm._m(0)
                 ])
               ])
             ])
@@ -39942,25 +39930,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("ul", { staticClass: "navbar-nav mr-auto" }, [
-      _c("li", { staticClass: "nav-item active" }, [
-        _c("a", { staticClass: "nav-link", attrs: { href: "/home" } }, [
-          _vm._v("Home "),
-          _c("span", { staticClass: "sr-only" })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("li", { staticClass: "nav-item" }, [
-        _c("a", { staticClass: "nav-link", attrs: { href: "#" } }, [
-          _vm._v("About")
-        ])
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -40137,7 +40106,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "col-6 col-border-right text-center" }, [
       _c("img", {
         staticClass: "img-fluid",
-        attrs: { src: __webpack_require__(/*! ../../../img/smart-home-index.png */ "./resources/img/smart-home-index.png") }
+        attrs: { src: __webpack_require__(/*! ../../../img/index.png */ "./resources/img/index.png") }
       })
     ])
   },
@@ -40489,7 +40458,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "col-6 col-border-right text-center" }, [
       _c("img", {
         staticClass: "img-fluid",
-        attrs: { src: __webpack_require__(/*! ../../../img/smart-home-index.png */ "./resources/img/smart-home-index.png") }
+        attrs: { src: __webpack_require__(/*! ../../../img/index.png */ "./resources/img/index.png") }
       })
     ])
   },
@@ -57905,14 +57874,14 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ "./resources/img/smart-home-index.png":
-/*!********************************************!*\
-  !*** ./resources/img/smart-home-index.png ***!
-  \********************************************/
+/***/ "./resources/img/index.png":
+/*!*********************************!*\
+  !*** ./resources/img/index.png ***!
+  \*********************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "/images/smart-home-index.png?25bf08e2d93badc18760d1ad026bbc3e";
+module.exports = "/images/index.png?46ff217e5539a339c3981b8b039f6513";
 
 /***/ }),
 
