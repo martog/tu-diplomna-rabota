@@ -2,40 +2,49 @@
     <div class="container">
         <div class="row">
             <div class="col-3" v-if="!this.editModeEnabled">
-                <h5>Device:</h5>
-                <p>
-                    {{ newDeviceName ? newDeviceName : deviceName }}
-                    <span
-                        @click="enableEditMode(true)"
-                        class="material-icons custom-icon"
-                    >
-                        edit
-                    </span>
-                </p>
+                <div class="row"><h5>Device:</h5></div>
+                <div class="row align-items-center">
+                    <div class="col-md-auto px-0">
+                        {{ newDeviceName ? newDeviceName : deviceName }}
+                    </div>
+                    <div class="col-md-auto">
+                        <span
+                            @click="enableEditMode(true)"
+                            class="material-icons custom-icon"
+                        >
+                            edit
+                        </span>
+                    </div>
+                </div>
             </div>
             <div class="col-3" v-else>
-                <h5>Device:</h5>
-                <input type="text" v-model="newDeviceName" />
-                <span
-                    v-if="!deviceUpdateLoading"
-                    @click="save(deviceId)"
-                    class="material-icons custom-icon"
-                >
-                    check
-                </span>
-                <span
-                    v-if="!deviceUpdateLoading"
-                    @click="cancelEdit()"
-                    class="material-icons custom-icon"
-                >
-                    clear
-                </span>
-                <div
-                    v-if="deviceUpdateLoading"
-                    class="ml-1 spinner-border spinner-border-sm"
-                    role="status"
-                >
-                    <span class="sr-only">Loading...</span>
+                <div class="row"><h5>Device:</h5></div>
+                <div class="row align-items-center">
+                    <div class="col-md-8 px-0">
+                        <input type="text" v-model="newDeviceName" />
+                    </div>
+                    <div class="col-md" v-if="!deviceUpdateLoading">
+                        <span
+                            @click="save(deviceId)"
+                            class="material-icons custom-icon align-middle"
+                        >
+                            check
+                        </span>
+                        <span
+                            @click="cancelEdit()"
+                            class="material-icons custom-icon align-middle"
+                        >
+                            clear
+                        </span>
+                    </div>
+
+                    <div
+                        v-if="deviceUpdateLoading"
+                        class=" ml-4 pr-0 spinner-border spinner-border-sm"
+                        role="status"
+                    >
+                        <span class="sr-only">Loading...</span>
+                    </div>
                 </div>
             </div>
             <div class="col-4">
@@ -93,11 +102,13 @@ export default {
             deviceStatusNotChangedErrMsg:
                 "Device status not changed. Check connection!",
             editModeEnabled: false,
-            newDeviceName: null
+            newDeviceName: null,
+            currentDeviceName: null
         };
     },
     created() {
         this.deviceLastUpdated = this.deviceLastUpdatedProp;
+        this.currentDeviceName = this.deviceName;
         this.newDeviceName = this.deviceName;
     },
     methods: {
@@ -146,9 +157,10 @@ export default {
                 .then(response => {
                     this.deviceUpdateLoading = false;
                     this.editModeEnabled = false;
+                    this.currentDeviceName = this.newDeviceName;
                 })
                 .catch(error => {
-                    this.newDeviceName = this.deviceName;
+                    this.newDeviceName = this.currentDeviceName;
                     this.deviceUpdateLoading = false;
                     this.editModeEnabled = false;
                 });
@@ -157,7 +169,7 @@ export default {
             this.editModeEnabled = value;
         },
         cancelEdit() {
-            this.newDeviceName = this.deviceName;
+            this.newDeviceName = this.currentDeviceName;
             this.enableEditMode(false);
         }
     }

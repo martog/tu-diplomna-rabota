@@ -3172,6 +3172,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     deviceId: Number,
@@ -3188,11 +3197,13 @@ __webpack_require__.r(__webpack_exports__);
       deviceUpdateLoading: false,
       deviceStatusNotChangedErrMsg: "Device status not changed. Check connection!",
       editModeEnabled: false,
-      newDeviceName: null
+      newDeviceName: null,
+      currentDeviceName: null
     };
   },
   created: function created() {
     this.deviceLastUpdated = this.deviceLastUpdatedProp;
+    this.currentDeviceName = this.deviceName;
     this.newDeviceName = this.deviceName;
   },
   methods: {
@@ -3238,8 +3249,9 @@ __webpack_require__.r(__webpack_exports__);
       updateDeviceNameRequest.then(function (response) {
         _this2.deviceUpdateLoading = false;
         _this2.editModeEnabled = false;
+        _this2.currentDeviceName = _this2.newDeviceName;
       })["catch"](function (error) {
-        _this2.newDeviceName = _this2.deviceName;
+        _this2.newDeviceName = _this2.currentDeviceName;
         _this2.deviceUpdateLoading = false;
         _this2.editModeEnabled = false;
       });
@@ -3248,7 +3260,7 @@ __webpack_require__.r(__webpack_exports__);
       this.editModeEnabled = value;
     },
     cancelEdit: function cancelEdit() {
-      this.newDeviceName = this.deviceName;
+      this.newDeviceName = this.currentDeviceName;
       this.enableEditMode(false);
     }
   }
@@ -41297,98 +41309,120 @@ var render = function() {
     _c("div", { staticClass: "row" }, [
       !this.editModeEnabled
         ? _c("div", { staticClass: "col-3" }, [
-            _c("h5", [_vm._v("Device:")]),
+            _vm._m(0),
             _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "\n                " +
-                  _vm._s(
-                    _vm.newDeviceName ? _vm.newDeviceName : _vm.deviceName
-                  ) +
-                  "\n                "
-              ),
-              _c(
-                "span",
-                {
-                  staticClass: "material-icons custom-icon",
-                  on: {
-                    click: function($event) {
-                      return _vm.enableEditMode(true)
+            _c("div", { staticClass: "row align-items-center" }, [
+              _c("div", { staticClass: "col-md-auto px-0" }, [
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(
+                      _vm.newDeviceName ? _vm.newDeviceName : _vm.deviceName
+                    ) +
+                    "\n                "
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-auto" }, [
+                _c(
+                  "span",
+                  {
+                    staticClass: "material-icons custom-icon",
+                    on: {
+                      click: function($event) {
+                        return _vm.enableEditMode(true)
+                      }
                     }
-                  }
-                },
-                [_vm._v("\n                    edit\n                ")]
-              )
+                  },
+                  [
+                    _vm._v(
+                      "\n                        edit\n                    "
+                    )
+                  ]
+                )
+              ])
             ])
           ])
         : _c("div", { staticClass: "col-3" }, [
-            _c("h5", [_vm._v("Device:")]),
+            _vm._m(1),
             _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.newDeviceName,
-                  expression: "newDeviceName"
-                }
-              ],
-              attrs: { type: "text" },
-              domProps: { value: _vm.newDeviceName },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+            _c("div", { staticClass: "row align-items-center" }, [
+              _c("div", { staticClass: "col-md-8 px-0" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.newDeviceName,
+                      expression: "newDeviceName"
+                    }
+                  ],
+                  attrs: { type: "text" },
+                  domProps: { value: _vm.newDeviceName },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.newDeviceName = $event.target.value
+                    }
                   }
-                  _vm.newDeviceName = $event.target.value
-                }
-              }
-            }),
-            _vm._v(" "),
-            !_vm.deviceUpdateLoading
-              ? _c(
-                  "span",
-                  {
-                    staticClass: "material-icons custom-icon",
-                    on: {
-                      click: function($event) {
-                        return _vm.save(_vm.deviceId)
-                      }
-                    }
-                  },
-                  [_vm._v("\n                check\n            ")]
-                )
-              : _vm._e(),
-            _vm._v(" "),
-            !_vm.deviceUpdateLoading
-              ? _c(
-                  "span",
-                  {
-                    staticClass: "material-icons custom-icon",
-                    on: {
-                      click: function($event) {
-                        return _vm.cancelEdit()
-                      }
-                    }
-                  },
-                  [_vm._v("\n                clear\n            ")]
-                )
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.deviceUpdateLoading
-              ? _c(
-                  "div",
-                  {
-                    staticClass: "ml-1 spinner-border spinner-border-sm",
-                    attrs: { role: "status" }
-                  },
-                  [
-                    _c("span", { staticClass: "sr-only" }, [
-                      _vm._v("Loading...")
-                    ])
-                  ]
-                )
-              : _vm._e()
+                })
+              ]),
+              _vm._v(" "),
+              !_vm.deviceUpdateLoading
+                ? _c("div", { staticClass: "col-md" }, [
+                    _c(
+                      "span",
+                      {
+                        staticClass: "material-icons custom-icon align-middle",
+                        on: {
+                          click: function($event) {
+                            return _vm.save(_vm.deviceId)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        check\n                    "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        staticClass: "material-icons custom-icon align-middle",
+                        on: {
+                          click: function($event) {
+                            return _vm.cancelEdit()
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        clear\n                    "
+                        )
+                      ]
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.deviceUpdateLoading
+                ? _c(
+                    "div",
+                    {
+                      staticClass:
+                        " ml-4 pr-0 spinner-border spinner-border-sm",
+                      attrs: { role: "status" }
+                    },
+                    [
+                      _c("span", { staticClass: "sr-only" }, [
+                        _vm._v("Loading...")
+                      ])
+                    ]
+                  )
+                : _vm._e()
+            ])
           ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-4" }, [
@@ -41457,7 +41491,20 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [_c("h5", [_vm._v("Device:")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [_c("h5", [_vm._v("Device:")])])
+  }
+]
 render._withStripped = true
 
 
